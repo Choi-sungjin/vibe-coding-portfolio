@@ -1,0 +1,58 @@
+/* variables.css — 디자인 시스템 변수 */
+:root {
+  /* Primary — 딥 퍼플 시그니처 */
+  --color-primary: #7B2D8B;
+  --color-primary-dark: #5A1F68;
+  --color-primary-light: #9B4DB5;
+  --color-primary-gradient-start: #8B3FA3;
+  --color-primary-gradient-end: #6A1F7A;
+
+  /* Neon Accent */
+  --color-neon-violet: #B06FD8;
+  --color-neon-pink: #E91E8C;
+  --color-neon-cyan: #00D4FF;
+  --color-neon-green: #00FF94;
+
+  /* Background */
+  --color-bg-primary: #1A0A2E;
+  --color-bg-secondary: #2D1247;
+  --color-bg-card: #3D1A5C;
+  --color-bg-glass: rgba(61, 26, 92, 0.6);
+
+  /* Text */
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #D4B8E8;
+  --color-text-muted: #9B8AB0;
+  --color-text-code: #00FF94;
+
+  /* UI */
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-border-glow: rgba(176, 111, 216, 0.5);
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* Shadows & Glow */
+  --shadow-card: 0 8px 32px rgba(123, 45, 139, 0.3);
+  --shadow-glow-purple: 0 0 24px rgba(176, 111, 216, 0.6);
+  --shadow-glow-pink: 0 0 24px rgba(233, 30, 140, 0.6);
+  --shadow-glow-cyan: 0 0 24px rgba(0, 212, 255, 0.4);
+
+  /* Header */
+  --header-height-mobile: 56px;
+  --header-height-desktop: 64px;
+}
