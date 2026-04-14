@@ -74,4 +74,4 @@ seongjin-portfolio/
 
 ---
 
-© 2024 Choi Seongjin. Designed & Developed by 최성진.
+© 2026 Choi Seongjin. Designed & Developed by 최성진.

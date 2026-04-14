@@ -2,6 +2,9 @@
  * 진입점: 스크롤 fade-up, 통계 count-up, 연락처 폼/복사, 모바일 메뉴, TOP
  */
 (function () {
+  if (window.__portfolioMainInitialized) return;
+  window.__portfolioMainInitialized = true;
+
   function easeOutCubic(t) {
     return 1 - Math.pow(1 - t, 3);
   }
@@ -22,7 +25,7 @@
     requestAnimationFrame(step);
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
+  function init() {
     var body = document.body;
 
     /* 스크롤 fade-up (프로젝트 카드, about 등) */
@@ -51,6 +54,7 @@
           if (target && !el.dataset.done) {
             el.dataset.done = '1';
             countUp(el, target, 2000);
+            statObserver.unobserve(el);
           }
         });
       },
@@ -148,5 +152,11 @@
         }
       });
     });
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
 })();

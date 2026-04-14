@@ -1,41 +1,38 @@
 /**
- * Hero 타이핑 이펙트: Web / PLC / 통합 포지셔닝 순환
+ * Hero 포지셔닝 문구 로테이션
+ * 첫 화면에서는 빠른 타자 효과보다 안정적인 문구 전환이 더 읽기 쉽다.
  */
 (function () {
   var target = document.getElementById('typingTarget');
   if (!target) return;
 
   var words = ['Web Developer', 'PLC Automation Engineer', 'Web & PLC Automation Engineer'];
-  var typeSpeed = 80;
-  var deleteSpeed = 40;
-  var pauseAfter = 2000;
+  var displayDuration = 3200;
+  var fadeDuration = 220;
   var wordIndex = 0;
-  var charIndex = 0;
-  var isDeleting = false;
-  var timeoutId;
+  var timeoutId = null;
 
-  function tick() {
-    var current = words[wordIndex];
-    if (isDeleting) {
-      charIndex--;
-      target.textContent = current.slice(0, charIndex);
-      timeoutId = setTimeout(tick, deleteSpeed);
-    } else {
-      charIndex++;
-      target.textContent = current.slice(0, charIndex);
-      if (charIndex === current.length) {
-        isDeleting = true;
-        timeoutId = setTimeout(tick, pauseAfter);
-        return;
-      }
-      timeoutId = setTimeout(tick, typeSpeed);
-    }
-    if (isDeleting && charIndex === 0) {
-      isDeleting = false;
-      wordIndex = (wordIndex + 1) % words.length;
-      timeoutId = setTimeout(tick, typeSpeed);
-    }
+  if (window.__heroTypingTimer) {
+    clearTimeout(window.__heroTypingTimer);
   }
 
-  tick();
+  target.textContent = words[wordIndex];
+  target.classList.remove('is-switching');
+
+  function scheduleNext() {
+    timeoutId = setTimeout(function () {
+      target.classList.add('is-switching');
+
+      window.__heroTypingTimer = setTimeout(function () {
+        wordIndex = (wordIndex + 1) % words.length;
+        target.textContent = words[wordIndex];
+        target.classList.remove('is-switching');
+        scheduleNext();
+      }, fadeDuration);
+    }, displayDuration);
+
+    window.__heroTypingTimer = timeoutId;
+  }
+
+  scheduleNext();
 })();
