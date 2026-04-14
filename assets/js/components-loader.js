@@ -33,6 +33,7 @@
       'assets/js/typing.js',
       'assets/js/scroll.js',
       'assets/js/skills.js',
+      'assets/js/hand-tracking-demo.js',
       'assets/js/main.js'
     ];
     return list.reduce(function (p, src) {

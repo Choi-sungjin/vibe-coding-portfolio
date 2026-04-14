@@ -333,7 +333,11 @@
   letter-spacing: 0.14em;
 }
 
-.hero-experiment-card .showcase-media img {
+.hero-experiment-card .showcase-stage {
+  position: relative;
+}
+
+.hero-experiment-card .robot-hand-visual {
   display: block;
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -341,6 +345,136 @@
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
+}
+
+.hero-experiment-card .camera-preview-shell {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 2;
+  width: min(42%, 240px);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(8, 10, 20, 0.82);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(12px);
+}
+
+.hero-experiment-card .camera-preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.hero-experiment-card .camera-preview-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-primary);
+  font-size: 10px;
+}
+
+.hero-experiment-card .camera-preview-video,
+.hero-experiment-card .camera-preview-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background: rgba(5, 7, 16, 0.96);
+}
+
+.hero-experiment-card .camera-preview-video {
+  display: none;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.hero-experiment-card .camera-preview-video.is-visible {
+  display: block;
+}
+
+.hero-experiment-card .camera-preview-placeholder {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  padding: 18px 14px;
+  text-align: center;
+}
+
+.hero-experiment-card .camera-preview-placeholder strong {
+  color: var(--color-text-primary);
+  font-size: 15px;
+}
+
+.hero-experiment-card .camera-preview-placeholder p {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.hero-experiment-card .showcase-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.hero-experiment-card .camera-request-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 12px 18px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: var(--color-text-primary);
+  font-weight: 700;
+  box-shadow: var(--shadow-glow-purple);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.hero-experiment-card .camera-request-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 24px rgba(176, 111, 216, 0.65);
+}
+
+.hero-experiment-card .camera-request-btn:disabled {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+.hero-experiment-card .camera-status-message {
+  flex: 1 1 220px;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.hero-experiment-card .camera-preview-shell[data-camera-state="granted"] .camera-preview-badge {
+  background: rgba(94, 247, 175, 0.16);
+  color: #7ff7bf;
+}
+
+.hero-experiment-card .camera-preview-shell[data-camera-state="pending"] .camera-preview-badge {
+  background: rgba(0, 212, 255, 0.14);
+  color: var(--color-neon-cyan);
+}
+
+.hero-experiment-card .camera-preview-shell[data-camera-state="denied"] .camera-preview-badge,
+.hero-experiment-card .camera-preview-shell[data-camera-state="error"] .camera-preview-badge,
+.hero-experiment-card .camera-preview-shell[data-camera-state="unsupported"] .camera-preview-badge {
+  background: rgba(255, 96, 96, 0.16);
+  color: #ff9c9c;
 }
 
 .hero-experiment-card .showcase-media figcaption {
