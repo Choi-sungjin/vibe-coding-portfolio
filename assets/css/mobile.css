@@ -11,7 +11,8 @@
   }
 
   .hero-experiment-card .card-topline,
-  .hero-experiment-card .showcase-overlay {
+  .hero-experiment-card .tracking-panel-head,
+  .hero-experiment-card .showcase-controls {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -20,20 +21,23 @@
     align-self: flex-start;
   }
 
-  .hero-experiment-card .camera-preview-shell {
-    position: static;
-    width: 100%;
-    margin-top: 14px;
+  .hero-experiment-card .camera-stage,
+  .hero-experiment-card .robot-stage {
+    min-height: 320px;
   }
 
-  .hero-experiment-card .camera-preview-head,
-  .hero-experiment-card .showcase-controls {
-    flex-direction: column;
-    align-items: stretch;
+  .hero-experiment-card .tracking-chip,
+  .hero-experiment-card .camera-status-message {
+    width: 100%;
   }
 
-  .hero-experiment-card .camera-request-btn {
+  .hero-experiment-card .camera-request-btn,
+  .hero-experiment-card .camera-disconnect-btn {
     width: 100%;
+  }
+
+  .hero-experiment-card .tracking-stats {
+    grid-template-columns: 1fr;
   }
 
   .grid-stats .stat-card .number {

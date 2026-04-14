@@ -308,139 +308,198 @@
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 16px;
+  gap: 18px;
 }
 
-.hero-experiment-card .showcase-media {
-  position: relative;
-  margin: 0;
+@media (min-width: 980px) {
+  .hero-experiment-card .handtracking-showcase {
+    grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+    align-items: start;
+  }
+}
+
+.hero-experiment-card .tracking-panel {
+  display: grid;
+  gap: 14px;
   padding: 18px;
   border-radius: 24px;
   background:
-    radial-gradient(circle at top, rgba(0, 212, 255, 0.1), transparent 40%),
-    rgba(7, 8, 18, 0.58);
+    radial-gradient(circle at top, rgba(0, 212, 255, 0.08), transparent 42%),
+    rgba(7, 8, 18, 0.56);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.hero-experiment-card .showcase-overlay {
+.hero-experiment-card .tracking-panel-head {
   display: flex;
+  align-items: end;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
-  color: var(--color-text-muted);
+  gap: 14px;
+}
+
+.hero-experiment-card .tracking-panel-head strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--color-text-primary);
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.hero-experiment-card .tracking-panel-label {
+  color: var(--color-neon-cyan);
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
 }
 
-.hero-experiment-card .showcase-stage {
-  position: relative;
-}
-
-.hero-experiment-card .robot-hand-visual {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
-}
-
-.hero-experiment-card .camera-preview-shell {
-  position: absolute;
-  left: 18px;
-  bottom: 18px;
-  z-index: 2;
-  width: min(42%, 240px);
-  border-radius: 18px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(8, 10, 20, 0.82);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.34);
-  backdrop-filter: blur(12px);
-}
-
-.hero-experiment-card .camera-preview-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--color-text-muted);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-}
-
-.hero-experiment-card .camera-preview-badge {
+.hero-experiment-card .tracking-chip {
   display: inline-flex;
   align-items: center;
-  min-height: 24px;
-  padding: 4px 8px;
+  min-height: 34px;
+  padding: 8px 12px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.07);
   color: var(--color-text-primary);
-  font-size: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
 }
 
-.hero-experiment-card .camera-preview-video,
-.hero-experiment-card .camera-preview-placeholder {
-  width: 100%;
-  aspect-ratio: 4 / 5;
+.hero-experiment-card .tracking-chip.is-live {
+  background: rgba(94, 247, 175, 0.16);
+  color: #7ff7bf;
+}
+
+.hero-experiment-card .tracking-chip.is-pending {
+  background: rgba(0, 212, 255, 0.14);
+  color: var(--color-neon-cyan);
+}
+
+.hero-experiment-card .tracking-chip.is-error {
+  background: rgba(255, 96, 96, 0.16);
+  color: #ff9c9c;
+}
+
+.hero-experiment-card .camera-stage,
+.hero-experiment-card .robot-stage {
+  position: relative;
+  min-height: 420px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(5, 7, 16, 0.96);
 }
 
-.hero-experiment-card .camera-preview-video {
-  display: none;
+.hero-experiment-card .camera-stage {
+  isolation: isolate;
+}
+
+.hero-experiment-card .camera-preview-video,
+.hero-experiment-card .camera-overlay-canvas,
+.hero-experiment-card .camera-stage-mask,
+.hero-experiment-card .camera-preview-placeholder,
+.hero-experiment-card .robot-hand-visual,
+.hero-experiment-card .robot-mapping-canvas,
+.hero-experiment-card .robot-stage-glow {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-experiment-card .robot-hand-visual {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  transform-origin: 50% 58%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
+  transition: transform 0.14s linear, filter 0.18s ease;
+  filter: saturate(1.05) contrast(1.06);
+}
+
+.hero-experiment-card .camera-preview-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.34;
+  filter: grayscale(0.14) saturate(0.8) contrast(1.06);
   transform: scaleX(-1);
 }
 
-.hero-experiment-card .camera-preview-video.is-visible {
-  display: block;
+.hero-experiment-card .camera-overlay-canvas,
+.hero-experiment-card .robot-mapping-canvas {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hero-experiment-card .camera-overlay-canvas {
+  z-index: 2;
+  transform: scaleX(-1);
+}
+
+.hero-experiment-card .robot-mapping-canvas,
+.hero-experiment-card .robot-stage-glow,
+.hero-experiment-card .camera-stage-mask {
+  pointer-events: none;
+}
+
+.hero-experiment-card .camera-stage-mask {
+  z-index: 1;
+  background:
+    radial-gradient(circle at center, transparent 0 48%, rgba(4, 7, 16, 0.62) 78%, rgba(4, 7, 16, 0.88) 100%),
+    linear-gradient(180deg, rgba(0, 212, 255, 0.08), transparent 28%, transparent 72%, rgba(176, 111, 216, 0.12));
 }
 
 .hero-experiment-card .camera-preview-placeholder {
+  z-index: 3;
   display: grid;
   place-items: center;
-  gap: 8px;
-  padding: 18px 14px;
+  gap: 10px;
+  padding: 24px;
   text-align: center;
+  background:
+    radial-gradient(circle at center, rgba(0, 212, 255, 0.08), transparent 46%),
+    rgba(5, 7, 16, 0.92);
+}
+
+.hero-experiment-card .camera-preview-placeholder {
+  color: var(--color-text-secondary);
 }
 
 .hero-experiment-card .camera-preview-placeholder strong {
   color: var(--color-text-primary);
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .hero-experiment-card .camera-preview-placeholder p {
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
 .hero-experiment-card .showcase-controls {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: stretch;
   gap: 12px;
-  margin-top: 14px;
 }
 
-.hero-experiment-card .camera-request-btn {
+.hero-experiment-card .camera-request-btn,
+.hero-experiment-card .camera-disconnect-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 46px;
   padding: 12px 18px;
   border-radius: var(--radius-full);
+  font-weight: 700;
+  white-space: nowrap;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.hero-experiment-card .camera-request-btn {
   background: var(--color-primary);
   color: var(--color-text-primary);
-  font-weight: 700;
   box-shadow: var(--shadow-glow-purple);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
 .hero-experiment-card .camera-request-btn:hover {
@@ -448,49 +507,86 @@
   box-shadow: 0 0 24px rgba(176, 111, 216, 0.65);
 }
 
-.hero-experiment-card .camera-request-btn:disabled {
+.hero-experiment-card .camera-disconnect-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-experiment-card .camera-disconnect-btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.hero-experiment-card .camera-request-btn:disabled,
+.hero-experiment-card .camera-disconnect-btn:disabled {
   opacity: 0.72;
   cursor: wait;
 }
 
 .hero-experiment-card .camera-status-message {
   flex: 1 1 220px;
+  align-self: center;
   color: var(--color-text-secondary);
   font-size: 14px;
   line-height: 1.7;
 }
 
-.hero-experiment-card .camera-preview-shell[data-camera-state="granted"] .camera-preview-badge {
-  background: rgba(94, 247, 175, 0.16);
-  color: #7ff7bf;
-}
-
-.hero-experiment-card .camera-preview-shell[data-camera-state="pending"] .camera-preview-badge {
-  background: rgba(0, 212, 255, 0.14);
-  color: var(--color-neon-cyan);
-}
-
-.hero-experiment-card .camera-preview-shell[data-camera-state="denied"] .camera-preview-badge,
-.hero-experiment-card .camera-preview-shell[data-camera-state="error"] .camera-preview-badge,
-.hero-experiment-card .camera-preview-shell[data-camera-state="unsupported"] .camera-preview-badge {
-  background: rgba(255, 96, 96, 0.16);
-  color: #ff9c9c;
-}
-
-.hero-experiment-card .showcase-media figcaption {
-  margin-top: 14px;
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
+.hero-experiment-card .tracking-caption {
   color: var(--color-text-primary);
   font-size: 15px;
   font-weight: 700;
   text-align: center;
 }
 
+.hero-experiment-card .robot-stage {
+  isolation: isolate;
+  transform-style: preserve-3d;
+  perspective: 1400px;
+}
+
+.hero-experiment-card .robot-stage-glow {
+  background:
+    radial-gradient(circle at 50% 72%, rgba(0, 212, 255, 0.12), transparent 34%),
+    radial-gradient(circle at 50% 50%, rgba(176, 111, 216, 0.09), transparent 56%);
+  pointer-events: none;
+}
+
+.hero-experiment-card .tracking-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hero-experiment-card .tracking-stat {
+  display: grid;
+  gap: 6px;
+  min-height: 92px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.hero-experiment-card .tracking-stat span {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.hero-experiment-card .tracking-stat strong {
+  color: var(--color-text-primary);
+  font-size: 18px;
+  line-height: 1.35;
+}
+
 .hero-experiment-card .showcase-specs {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: 12px;
+  margin-top: 16px;
 }
 
 @media (min-width: 720px) {

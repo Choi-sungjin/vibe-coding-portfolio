@@ -75,50 +75,81 @@
           왼손 랜드마크를 읽고 5지 로봇손이 같은 포즈를 따라갑니다.
         </p>
         <div class="handtracking-showcase">
-          <figure class="showcase-media">
-            <div class="showcase-overlay">
-              <span>LAPTOP WEBCAM INPUT</span>
-              <span>ROBOT HAND OUTPUT</span>
+          <section class="tracking-panel tracking-panel-input">
+            <div class="tracking-panel-head">
+              <div>
+                <span class="tracking-panel-label">INPUT</span>
+                <strong>Laptop Webcam</strong>
+              </div>
+              <span class="tracking-chip" id="trackingChip">CAMERA OFF</span>
             </div>
-            <div class="showcase-stage">
-              <img class="robot-hand-visual" src="assets/images/projects/robot-hand-sync.png" alt="다섯 손가락 로봇손 핸드트래킹 이미지">
-              <div class="camera-preview-shell" id="cameraPreviewShell" data-camera-state="idle">
-                <div class="camera-preview-head">
-                  <span>LEFT HAND INPUT</span>
-                  <span class="camera-preview-badge" id="cameraPreviewBadge">WAITING</span>
-                </div>
-                <video class="camera-preview-video" id="handTrackingCamera" autoplay muted playsinline></video>
-                <div class="camera-preview-placeholder" id="cameraPreviewPlaceholder">
-                  <strong>카메라 권한 필요</strong>
-                  <p>허용해야 핸드트래킹 입력을 받을 수 있습니다.</p>
-                </div>
+            <div class="camera-stage" id="cameraPreviewShell" data-camera-state="idle">
+              <video class="camera-preview-video" id="handTrackingCamera" autoplay muted playsinline></video>
+              <canvas class="camera-overlay-canvas" id="handTrackingOverlay"></canvas>
+              <div class="camera-stage-mask" aria-hidden="true"></div>
+              <div class="camera-preview-placeholder" id="cameraPreviewPlaceholder">
+                <strong>카메라 권한 필요</strong>
+                <p>허용해야 핸드트래킹과 랜드마크 분석이 시작됩니다.</p>
               </div>
             </div>
             <div class="showcase-controls">
-              <button type="button" class="camera-request-btn" id="cameraRequestBtn">카메라 권한 요청</button>
+              <button type="button" class="camera-request-btn" id="cameraRequestBtn">카메라 연결</button>
+              <button type="button" class="camera-disconnect-btn" id="cameraDisconnectBtn" disabled>카메라 연결 끊기</button>
               <p class="camera-status-message" id="cameraStatusMessage" aria-live="polite">
                 핸드트래킹을 사용하려면 브라우저의 카메라 접근을 허용해주세요.
               </p>
             </div>
-            <figcaption>왼손을 카메라에 보여주세요</figcaption>
-          </figure>
-          <div class="showcase-specs">
-            <article class="spec-card">
-              <span class="spec-label">Input Device</span>
-              <strong>Laptop Webcam</strong>
-              <p>왼손 포즈와 손가락 관절 포인트를 실시간 인식</p>
-            </article>
-            <article class="spec-card">
-              <span class="spec-label">Mapping</span>
-              <strong>21-point Landmark</strong>
-              <p>손가락 관절 데이터와 랜드마크를 1:1로 매핑</p>
-            </article>
-            <article class="spec-card">
-              <span class="spec-label">Output</span>
-              <strong>Five-finger Robot Hand</strong>
-              <p>엄지부터 소지까지 같은 포즈를 실시간 추종</p>
-            </article>
-          </div>
+            <p class="tracking-caption">왼손을 카메라에 보여주세요</p>
+          </section>
+          <section class="tracking-panel tracking-panel-output">
+            <div class="tracking-panel-head">
+              <div>
+                <span class="tracking-panel-label">OUTPUT</span>
+                <strong>Robot Hand Mapping</strong>
+              </div>
+              <span class="tracking-chip tracking-chip-output" id="robotTrackingState">IDLE</span>
+            </div>
+            <div class="robot-stage" id="robotStage">
+              <img class="robot-hand-visual" src="assets/images/projects/robot-hand-sync.png" alt="다섯 손가락 로봇손 핸드트래킹 이미지">
+              <canvas class="robot-mapping-canvas" id="robotMappingCanvas"></canvas>
+              <div class="robot-stage-glow" aria-hidden="true"></div>
+            </div>
+            <div class="tracking-stats">
+              <article class="tracking-stat">
+                <span>Tracking</span>
+                <strong id="trackingMetric">Waiting</strong>
+              </article>
+              <article class="tracking-stat">
+                <span>Hand</span>
+                <strong id="handednessMetric">Not detected</strong>
+              </article>
+              <article class="tracking-stat">
+                <span>Pose</span>
+                <strong id="gestureMetric">Ready</strong>
+              </article>
+              <article class="tracking-stat">
+                <span>Depth</span>
+                <strong id="depthMetric">0.00</strong>
+              </article>
+            </div>
+          </section>
+        </div>
+        <div class="showcase-specs">
+          <article class="spec-card">
+            <span class="spec-label">21 Landmarks</span>
+            <strong>실시간 손 관절 추적</strong>
+            <p>랜드마크 21개와 연결선을 실제로 그려 입력 손 구조를 시각화</p>
+          </article>
+          <article class="spec-card">
+            <span class="spec-label">Robot Mapping</span>
+            <strong>다섯 손가락 관절 매핑</strong>
+            <p>검출 좌표를 로봇손 오버레이로 변환해 손가락 움직임을 연결</p>
+          </article>
+          <article class="spec-card">
+            <span class="spec-label">3D Motion</span>
+            <strong>입체 기울기 반응</strong>
+            <p>손 방향과 깊이값에 따라 로봇손 시각이 입체적으로 반응</p>
+          </article>
         </div>
       </div>
     </div>
