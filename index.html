@@ -110,7 +110,7 @@
               <span class="tracking-chip tracking-chip-output" id="robotTrackingState">IDLE</span>
             </div>
             <div class="robot-stage" id="robotStage">
-              <img class="robot-hand-visual" src="assets/images/projects/robot-hand-sync.png" alt="다섯 손가락 로봇손 핸드트래킹 이미지">
+              <img class="robot-hand-visual" src="assets/images/projects/robot-hand-poses/pose-open.png" alt="다섯 손가락 로봇손 핸드트래킹 이미지">
               <canvas class="robot-mapping-canvas" id="robotMappingCanvas"></canvas>
               <div class="robot-stage-glow" aria-hidden="true"></div>
             </div>
@@ -130,6 +130,43 @@
               <article class="tracking-stat">
                 <span>Depth</span>
                 <strong id="depthMetric">0.00</strong>
+              </article>
+            </div>
+            <div class="finger-metrics" aria-label="손가락 반응 상태">
+              <article class="finger-metric">
+                <div class="finger-metric-head">
+                  <span>Thumb</span>
+                  <strong id="thumbMetricValue">0%</strong>
+                </div>
+                <div class="finger-metric-track"><span id="thumbMetricBar"></span></div>
+              </article>
+              <article class="finger-metric">
+                <div class="finger-metric-head">
+                  <span>Index</span>
+                  <strong id="indexMetricValue">0%</strong>
+                </div>
+                <div class="finger-metric-track"><span id="indexMetricBar"></span></div>
+              </article>
+              <article class="finger-metric">
+                <div class="finger-metric-head">
+                  <span>Middle</span>
+                  <strong id="middleMetricValue">0%</strong>
+                </div>
+                <div class="finger-metric-track"><span id="middleMetricBar"></span></div>
+              </article>
+              <article class="finger-metric">
+                <div class="finger-metric-head">
+                  <span>Ring</span>
+                  <strong id="ringMetricValue">0%</strong>
+                </div>
+                <div class="finger-metric-track"><span id="ringMetricBar"></span></div>
+              </article>
+              <article class="finger-metric">
+                <div class="finger-metric-head">
+                  <span>Pinky</span>
+                  <strong id="pinkyMetricValue">0%</strong>
+                </div>
+                <div class="finger-metric-track"><span id="pinkyMetricBar"></span></div>
               </article>
             </div>
           </section>

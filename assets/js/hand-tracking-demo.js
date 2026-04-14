@@ -21,6 +21,83 @@
     [0, 17]
   ];
 
+  var FINGER_CONFIGS = [
+    { key: 'thumb', label: 'TH', tip: 4, chain: [1, 2, 3, 4], color: 'rgba(255, 156, 96, 0.96)' },
+    { key: 'index', label: 'IN', tip: 8, chain: [5, 6, 7, 8], color: 'rgba(95, 209, 255, 0.96)' },
+    { key: 'middle', label: 'MD', tip: 12, chain: [9, 10, 11, 12], color: 'rgba(114, 245, 187, 0.96)' },
+    { key: 'ring', label: 'RG', tip: 16, chain: [13, 14, 15, 16], color: 'rgba(195, 129, 255, 0.96)' },
+    { key: 'pinky', label: 'PK', tip: 20, chain: [17, 18, 19, 20], color: 'rgba(255, 110, 204, 0.96)' }
+  ];
+
+  var ROBOT_POSE_LIBRARY = [
+    {
+      key: 'fist',
+      label: 'Fist',
+      src: 'assets/images/projects/robot-hand-poses/pose-fist.png',
+      targets: [10, 10, 10, 10, 10]
+    },
+    {
+      key: 'hook',
+      label: 'Hook',
+      src: 'assets/images/projects/robot-hand-poses/pose-hook.png',
+      targets: [55, 18, 16, 18, 16]
+    },
+    {
+      key: 'claw',
+      label: 'Claw',
+      src: 'assets/images/projects/robot-hand-poses/pose-claw.png',
+      targets: [72, 42, 36, 36, 32]
+    },
+    {
+      key: 'thumb-open',
+      label: 'Thumb Open',
+      src: 'assets/images/projects/robot-hand-poses/pose-thumb-open.png',
+      targets: [95, 74, 76, 72, 68]
+    },
+    {
+      key: 'relaxed-open',
+      label: 'Relaxed Open',
+      src: 'assets/images/projects/robot-hand-poses/pose-relaxed-open.png',
+      targets: [82, 88, 94, 90, 84]
+    },
+    {
+      key: 'open',
+      label: 'Open Hand',
+      src: 'assets/images/projects/robot-hand-poses/pose-open.png',
+      targets: [84, 100, 100, 100, 100]
+    },
+    {
+      key: 'rock',
+      label: 'Rock',
+      src: 'assets/images/projects/robot-hand-poses/pose-rock.png',
+      targets: [86, 96, 18, 18, 92]
+    },
+    {
+      key: 'split',
+      label: 'Split',
+      src: 'assets/images/projects/robot-hand-poses/pose-split.png',
+      targets: [82, 100, 96, 24, 64]
+    },
+    {
+      key: 'precision',
+      label: 'Precision',
+      src: 'assets/images/projects/robot-hand-poses/pose-precision.png',
+      targets: [84, 98, 96, 48, 82]
+    },
+    {
+      key: 'tripod',
+      label: 'Tripod',
+      src: 'assets/images/projects/robot-hand-poses/pose-tripod.png',
+      targets: [86, 96, 34, 94, 90]
+    },
+    {
+      key: 'ring-fold',
+      label: 'Ring Fold',
+      src: 'assets/images/projects/robot-hand-poses/pose-ring-fold.png',
+      targets: [84, 98, 100, 36, 98]
+    }
+  ];
+
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
   }
@@ -179,6 +256,16 @@
     });
   }
 
+  function smoothValues(previous, nextValues, amount) {
+    if (!previous || previous.length !== nextValues.length) {
+      return nextValues.slice();
+    }
+
+    return nextValues.map(function (value, index) {
+      return lerp(previous[index], value, amount);
+    });
+  }
+
   function drawConnections(ctx, points, color, lineWidth, glow) {
     ctx.strokeStyle = color;
     ctx.lineWidth = lineWidth;
@@ -219,13 +306,95 @@
     drawPoints(ctx, points, 'rgba(255, 255, 255, 0.96)', 'rgba(78, 223, 255, 0.95)', 1);
   }
 
-  function drawRobotHand(ctx, points) {
+  function drawRobotFingerHighlights(ctx, points, fingerMetrics) {
+    fingerMetrics.forEach(function (metric, index) {
+      var config = FINGER_CONFIGS[index];
+      var tipPoint = points[config.tip];
+      if (!tipPoint) return;
+
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      ctx.strokeStyle = config.color;
+      ctx.fillStyle = config.color;
+      ctx.shadowColor = config.color;
+      ctx.shadowBlur = 18;
+      ctx.lineWidth = 3 + metric.intensity * 5;
+
+      ctx.beginPath();
+      config.chain.forEach(function (pointIndex, chainIndex) {
+        var point = points[pointIndex];
+        if (!point) return;
+        if (chainIndex === 0) ctx.moveTo(point.x, point.y);
+        else ctx.lineTo(point.x, point.y);
+      });
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(tipPoint.x, tipPoint.y, 7 + metric.intensity * 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+      ctx.font = '11px JetBrains Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(config.label, tipPoint.x, tipPoint.y - 14);
+      ctx.restore();
+    });
+  }
+
+  function drawRobotHand(ctx, points, fingerMetrics) {
     ctx.save();
     ctx.globalCompositeOperation = 'screen';
     drawConnections(ctx, points, 'rgba(95, 209, 255, 0.95)', 3.6, 'rgba(68, 190, 255, 0.9)');
     drawConnections(ctx, points, 'rgba(194, 129, 255, 0.55)', 6.4, 'rgba(176, 111, 216, 0.72)');
     drawPoints(ctx, points, 'rgba(236, 244, 255, 0.96)', 'rgba(95, 209, 255, 0.92)', 1.18);
+    if (fingerMetrics && fingerMetrics.length) {
+      drawRobotFingerHighlights(ctx, points, fingerMetrics);
+    }
     ctx.restore();
+  }
+
+  function computeFingerMetrics(landmarks) {
+    var palmSize = Math.max(distance(landmarks[0], landmarks[9]), 0.001);
+
+    return FINGER_CONFIGS.map(function (config) {
+      var tipReach = distance(landmarks[config.tip], landmarks[0]) / palmSize;
+      var extension = clamp((tipReach - 0.85) / 1.05, 0, 1);
+
+      return {
+        key: config.key,
+        value: Math.round(extension * 100),
+        intensity: extension
+      };
+    });
+  }
+
+  function preloadRobotPoses() {
+    ROBOT_POSE_LIBRARY.forEach(function (pose) {
+      var image = new Image();
+      image.src = pose.src;
+      pose.image = image;
+    });
+  }
+
+  function pickRobotPose(values) {
+    var bestPose = ROBOT_POSE_LIBRARY[0];
+    var bestScore = Infinity;
+
+    ROBOT_POSE_LIBRARY.forEach(function (pose) {
+      var score = 0;
+      pose.targets.forEach(function (target, index) {
+        var delta = (values[index] || 0) - target;
+        score += delta * delta;
+      });
+
+      if (score < bestScore) {
+        bestScore = score;
+        bestPose = pose;
+      }
+    });
+
+    return bestPose;
   }
 
   function computeRobotPoints(landmarks, width, height) {
@@ -289,12 +458,39 @@
     var gestureMetric = document.getElementById('gestureMetric');
     var depthMetric = document.getElementById('depthMetric');
     var robotImage = robotStage ? robotStage.querySelector('.robot-hand-visual') : null;
+    var fingerMetrics = {
+      thumb: {
+        value: document.getElementById('thumbMetricValue'),
+        bar: document.getElementById('thumbMetricBar')
+      },
+      index: {
+        value: document.getElementById('indexMetricValue'),
+        bar: document.getElementById('indexMetricBar')
+      },
+      middle: {
+        value: document.getElementById('middleMetricValue'),
+        bar: document.getElementById('middleMetricBar')
+      },
+      ring: {
+        value: document.getElementById('ringMetricValue'),
+        bar: document.getElementById('ringMetricBar')
+      },
+      pinky: {
+        value: document.getElementById('pinkyMetricValue'),
+        bar: document.getElementById('pinkyMetricBar')
+      }
+    };
 
     if (
       !shell || !video || !overlayCanvas || !robotCanvas || !robotStage ||
       !placeholder || !requestBtn || !disconnectBtn || !status ||
       !trackingChip || !robotTrackingState || !trackingMetric ||
-      !handednessMetric || !gestureMetric || !depthMetric || !robotImage
+      !handednessMetric || !gestureMetric || !depthMetric || !robotImage ||
+      !fingerMetrics.thumb.value || !fingerMetrics.thumb.bar ||
+      !fingerMetrics.index.value || !fingerMetrics.index.bar ||
+      !fingerMetrics.middle.value || !fingerMetrics.middle.bar ||
+      !fingerMetrics.ring.value || !fingerMetrics.ring.bar ||
+      !fingerMetrics.pinky.value || !fingerMetrics.pinky.bar
     ) {
       return;
     }
@@ -309,7 +505,9 @@
       running: false,
       lastVideoTime: -1,
       smoothedRobotPoints: null,
+      smoothedFingerValues: null,
       smoothedRotation: { x: 0, y: 0, z: 0 },
+      currentRobotPoseKey: '',
       destroyed: false
     };
 
@@ -331,6 +529,16 @@
       handednessMetric.textContent = 'Not detected';
       gestureMetric.textContent = 'Ready';
       depthMetric.textContent = '0.0 cm';
+      Object.keys(fingerMetrics).forEach(function (key) {
+        fingerMetrics[key].value.textContent = '0%';
+        fingerMetrics[key].bar.style.width = '0%';
+      });
+    }
+
+    function setRobotPose(pose) {
+      if (!pose || state.currentRobotPoseKey === pose.key) return;
+      state.currentRobotPoseKey = pose.key;
+      robotImage.src = pose.src;
     }
 
     function hidePlaceholder() {
@@ -347,21 +555,29 @@
       robotImage.style.transform = 'translateZ(0px) scale(1)';
     }
 
-    function applyRobotTransform(targetRotation, hasHand, worldLandmarks) {
+    function applyRobotTransform(targetRotation, hasHand, worldLandmarks, landmarks) {
       state.smoothedRotation.x = lerp(state.smoothedRotation.x, targetRotation.x, 0.14);
       state.smoothedRotation.y = lerp(state.smoothedRotation.y, targetRotation.y, 0.14);
       state.smoothedRotation.z = lerp(state.smoothedRotation.z, targetRotation.z, 0.16);
 
       var depthScale = 1;
+      var offsetX = 0;
+      var offsetY = 0;
       if (hasHand && worldLandmarks && worldLandmarks.length > 9 && typeof worldLandmarks[9].z === 'number') {
         depthScale = 1 + clamp(Math.abs(worldLandmarks[9].z) * 0.8, 0, 0.08);
+      }
+      if (hasHand && landmarks && landmarks.length > 9) {
+        offsetX = clamp((landmarks[9].x - 0.5) * 26, -12, 12);
+        offsetY = clamp((landmarks[9].y - 0.5) * 18, -10, 10);
       }
 
       robotStage.style.transform =
         'perspective(1400px) rotateX(' + state.smoothedRotation.x.toFixed(2) + 'deg) ' +
         'rotateY(' + state.smoothedRotation.y.toFixed(2) + 'deg) ' +
         'rotateZ(' + state.smoothedRotation.z.toFixed(2) + 'deg)';
-      robotImage.style.transform = 'translateZ(16px) scale(' + depthScale.toFixed(3) + ')';
+      robotImage.style.transform =
+        'translate3d(' + offsetX.toFixed(2) + 'px, ' + offsetY.toFixed(2) + 'px, 16px) ' +
+        'scale(' + depthScale.toFixed(3) + ')';
     }
 
     function stopStream() {
@@ -385,6 +601,7 @@
       clearCanvas(inputCtx, overlayCanvas);
       clearCanvas(robotCtx, robotCanvas);
       state.smoothedRobotPoints = null;
+      state.smoothedFingerValues = null;
       resetRobotTransform();
     }
 
@@ -470,7 +687,12 @@
       gestureMetric.textContent = 'Waiting';
       depthMetric.textContent = '0.0 cm';
       setStatus('granted', '손이 화면 안에 들어오면 21개 랜드마크와 로봇손 매핑이 시작됩니다.');
-      applyRobotTransform({ x: 0, y: 0, z: 0 }, false, null);
+      applyRobotTransform({ x: 0, y: 0, z: 0 }, false, null, null);
+      Object.keys(fingerMetrics).forEach(function (key) {
+        fingerMetrics[key].value.textContent = '0%';
+        fingerMetrics[key].bar.style.width = '0%';
+      });
+      setRobotPose(ROBOT_POSE_LIBRARY[5]);
 
       clearCanvas(robotCtx, robotCanvas);
     }
@@ -489,9 +711,18 @@
       var robotPoints = smoothPoints(state.smoothedRobotPoints, rawRobotPoints, 0.34);
       var robotRotation = computeRobotRotation(landmarks, worldLandmarks);
       var handedness = getHandednessLabel(results);
-      var pose = getPoseLabel(landmarks);
+      var gesturePose = getPoseLabel(landmarks);
+      var fingerData = computeFingerMetrics(landmarks);
+      var smoothedFingerValues = smoothValues(
+        state.smoothedFingerValues,
+        fingerData.map(function (item) { return item.value; }),
+        0.28
+      );
+      var selectedRobotPose = pickRobotPose(smoothedFingerValues);
 
       state.smoothedRobotPoints = robotPoints;
+      state.smoothedFingerValues = smoothedFingerValues;
+      setRobotPose(selectedRobotPose);
 
       clearCanvas(inputCtx, overlayCanvas);
       prepareContext(inputCtx, inputSize);
@@ -499,21 +730,27 @@
 
       clearCanvas(robotCtx, robotCanvas);
       prepareContext(robotCtx, robotSize);
-      drawRobotHand(robotCtx, robotPoints);
+      drawRobotHand(robotCtx, robotPoints, fingerData);
 
-      applyRobotTransform(robotRotation, true, worldLandmarks);
+      applyRobotTransform(robotRotation, true, worldLandmarks, landmarks);
 
       setChip(trackingChip, 'LANDMARKS LIVE', 'live');
-      setChip(robotTrackingState, 'MAPPED', 'live');
+      setChip(robotTrackingState, selectedRobotPose.label.toUpperCase(), 'live');
       trackingMetric.textContent = '21 points';
       handednessMetric.textContent = handedness;
-      gestureMetric.textContent = pose;
+      gestureMetric.textContent = selectedRobotPose.label;
       depthMetric.textContent = getDepthText(worldLandmarks);
+      fingerData.forEach(function (item) {
+        if (!fingerMetrics[item.key]) return;
+        var smoothedValue = Math.round(smoothedFingerValues[FINGER_CONFIGS.findIndex(function (config) { return config.key === item.key; })] || 0);
+        fingerMetrics[item.key].value.textContent = smoothedValue + '%';
+        fingerMetrics[item.key].bar.style.width = smoothedValue + '%';
+      });
 
       if (handedness.toLowerCase() === 'right') {
         setStatus('granted', '오른손이 감지되었습니다. 왼손 기준 화면이지만 추적은 계속됩니다.');
       } else {
-        setStatus('granted', '왼손 랜드마크가 감지되어 로봇손 관절로 매핑 중입니다.');
+        setStatus('granted', '왼손 랜드마크가 감지되어 로봇손 포즈와 관절 표현에 반영되고 있습니다.');
       }
     }
 
@@ -618,6 +855,9 @@
 
     requestBtn.addEventListener('click', connectCamera);
     disconnectBtn.addEventListener('click', disconnectCamera);
+
+    preloadRobotPoses();
+    setRobotPose(ROBOT_POSE_LIBRARY[5]);
 
     window.addEventListener('beforeunload', function () {
       state.destroyed = true;

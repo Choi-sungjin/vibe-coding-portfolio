@@ -161,13 +161,18 @@
   grid-template-columns: 1fr;
   gap: var(--space-2xl);
   align-items: center;
-  max-width: var(--container-max);
+  width: min(1380px, calc(100vw - 40px));
+  max-width: none;
   margin: 0 auto;
   padding: var(--space-xl) var(--space-md);
 }
 
 @media (min-width: 1024px) {
-  .hero-inner { grid-template-columns: 1fr 1fr; gap: var(--space-3xl); padding: var(--space-2xl) var(--space-lg); }
+  .hero-inner {
+    grid-template-columns: minmax(300px, 0.76fr) minmax(0, 1.24fr);
+    gap: clamp(28px, 5vw, 72px);
+    padding: var(--space-2xl) var(--space-lg);
+  }
 }
 
 .hero-content .eyebrow {
@@ -214,6 +219,15 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-md);
+}
+
+.hero-content,
+.hero-experiment-card,
+.hero-experiment-card .tracking-panel,
+.hero-experiment-card .tracking-panel-head > div,
+.hero-experiment-card .tracking-stat,
+.hero-experiment-card .spec-card {
+  min-width: 0;
 }
 
 .hero-experiment-card {
@@ -292,16 +306,19 @@
   line-height: 1.1;
   letter-spacing: -0.03em;
   color: var(--color-text-primary);
+  max-width: 18ch;
+  overflow-wrap: anywhere;
 }
 
 .hero-experiment-card .card-desc {
   position: relative;
   z-index: 1;
   margin-bottom: var(--space-lg);
-  max-width: 36ch;
+  max-width: 42ch;
   color: var(--color-text-secondary);
   line-height: 1.8;
   font-size: 15px;
+  overflow-wrap: anywhere;
 }
 
 .hero-experiment-card .handtracking-showcase {
@@ -342,6 +359,7 @@
   color: var(--color-text-primary);
   font-size: 22px;
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .hero-experiment-card .tracking-panel-label {
@@ -362,7 +380,9 @@
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.12em;
-  white-space: nowrap;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .hero-experiment-card .tracking-chip.is-live {
@@ -492,7 +512,8 @@
   padding: 12px 18px;
   border-radius: var(--radius-full);
   font-weight: 700;
-  white-space: nowrap;
+  text-align: center;
+  white-space: normal;
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
@@ -530,6 +551,7 @@
   color: var(--color-text-secondary);
   font-size: 14px;
   line-height: 1.7;
+  overflow-wrap: anywhere;
 }
 
 .hero-experiment-card .tracking-caption {
@@ -579,6 +601,60 @@
   color: var(--color-text-primary);
   font-size: 18px;
   line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.hero-experiment-card .finger-metrics {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.hero-experiment-card .finger-metric {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.hero-experiment-card .finger-metric-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.hero-experiment-card .finger-metric-head span {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.hero-experiment-card .finger-metric-head strong {
+  color: var(--color-text-primary);
+  font-size: 13px;
+}
+
+.hero-experiment-card .finger-metric-track {
+  position: relative;
+  overflow: hidden;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.hero-experiment-card .finger-metric-track span {
+  display: block;
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(0, 212, 255, 0.95), rgba(176, 111, 216, 0.95));
+  box-shadow: 0 0 16px rgba(0, 212, 255, 0.32);
+  transition: width 0.08s linear;
 }
 
 .hero-experiment-card .showcase-specs {
@@ -617,12 +693,14 @@
   font-size: 18px;
   color: var(--color-text-primary);
   line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .hero-experiment-card .spec-card p {
   color: var(--color-text-secondary);
   line-height: 1.6;
   font-size: 13px;
+  overflow-wrap: anywhere;
 }
 
 .hero .scroll-hint {

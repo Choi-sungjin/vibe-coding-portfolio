@@ -40,6 +40,10 @@
     grid-template-columns: 1fr;
   }
 
+  .hero-experiment-card .finger-metrics {
+    grid-template-columns: 1fr;
+  }
+
   .grid-stats .stat-card .number {
     font-size: 20px;
   }
