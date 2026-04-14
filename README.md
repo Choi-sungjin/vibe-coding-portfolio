@@ -59,7 +59,7 @@ seongjin-portfolio/
 2. **Hero** — 파티클 배경, 코드 워터마크, 타이핑(Web Developer / PLC Automation Engineer / Web & PLC Automation Engineer), 코드 에디터 카드, CTA
 3. **Marquee** — 기술 스택 무한 스크롤
 4. **About Me** — 프로필(CSJ 아바타), 소개 텍스트, 이메일 복사, 이력서 버튼
-5. **Tech Stack** — 탭(Frontend/Backend/Database/DevOps/Tools), 스킬 카드 그리드
+5. **Tech Stack** — 탭(Automation/Web/Learning/Tools), 실제 경력 기반 역량과 현재 확장 중인 기술을 구분한 스킬 카드 그리드
 6. **Stats** — 숫자 count-up (커피, 코드 줄, 프로젝트, 기술)
 7. **Works** — 프로젝트 카드 3개, 자세히 보기 모달
 8. **Contact** — 연락처 링크, 문의 폼(UI만)

@@ -297,6 +297,13 @@
   color: var(--color-text-primary);
 }
 
+.marquee-inner span {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
