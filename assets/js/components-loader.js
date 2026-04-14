@@ -32,7 +32,6 @@
       'assets/js/particles.js',
       'assets/js/typing.js',
       'assets/js/scroll.js',
-      'assets/js/tab.js',
       'assets/js/skills.js',
       'assets/js/main.js'
     ];
