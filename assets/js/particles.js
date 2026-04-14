@@ -1,109 +1,45 @@
 /**
- * particles.js — Hero 배경 파티클 (Canvas)
- * 200개 점, 랜덤 위치·속도·투명도, 마우스 근접 시 끌리는 효과
+ * Hero 배경 파티클: 200개 점, 떠다니는 모션
  */
+(function () {
+  var container = document.getElementById('heroParticles');
+  if (!container) return;
 
-const PARTICLE_COUNT = 200;
-const MOUSE_INFLUENCE = 0.02;
-const MOVE_SPEED = 0.3;
+  var count = 200;
+  var particles = [];
+  var colors = ['rgba(176,111,216,0.4)', 'rgba(0,212,255,0.2)'];
 
-let canvas, ctx, particles = [];
-let mouseX = 0, mouseY = 0;
-let rafId = 0;
-
-function createParticles() {
-  const w = canvas.width;
-  const h = canvas.height;
-  particles = [];
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
+  for (var i = 0; i < count; i++) {
+    var p = document.createElement('span');
+    p.style.position = 'absolute';
+    p.style.width = '4px';
+    p.style.height = '4px';
+    p.style.borderRadius = '50%';
+    p.style.background = colors[i % colors.length];
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = Math.random() * 100 + '%';
+    p.style.pointerEvents = 'none';
+    container.appendChild(p);
     particles.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      vx: (Math.random() - 0.5) * MOVE_SPEED,
-      vy: (Math.random() - 0.5) * MOVE_SPEED,
-      radius: Math.random() * 1.5 + 0.5,
-      opacity: 0.2 + Math.random() * 0.2,
-      color: Math.random() > 0.5 ? 'rgba(176,111,216,0.4)' : 'rgba(0,212,255,0.2)',
+      el: p,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      opacity: 0.3 + Math.random() * 0.4
     });
   }
-}
 
-function draw() {
-  if (!ctx || !canvas) return;
-  const w = canvas.width;
-  const h = canvas.height;
-  ctx.clearRect(0, 0, w, h);
-
-  particles.forEach((p) => {
-    const dx = mouseX - p.x;
-    const dy = mouseY - p.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < 150 && dist > 0) {
-      const force = (150 - dist) / 150 * MOUSE_INFLUENCE;
-      p.vx += (dx / dist) * force;
-      p.vy += (dy / dist) * force;
-    }
-    p.vx *= 0.99;
-    p.vy *= 0.99;
-    p.x += p.vx;
-    p.y += p.vy;
-    if (p.x < 0 || p.x > w) p.vx *= -1;
-    if (p.y < 0 || p.y > h) p.vy *= -1;
-    p.x = Math.max(0, Math.min(w, p.x));
-    p.y = Math.max(0, Math.min(h, p.y));
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-    ctx.fillStyle = p.color;
-    ctx.globalAlpha = p.opacity;
-    ctx.fill();
-  });
-  ctx.globalAlpha = 1;
-  rafId = requestAnimationFrame(draw);
-}
-
-function resize() {
-  if (!canvas) return;
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width;
-  canvas.height = rect.height;
-  createParticles();
-}
-
-export function initParticles() {
-  canvas = document.getElementById('hero-canvas');
-  if (!canvas) return;
-  ctx = canvas.getContext('2d');
-  resize();
-  createParticles();
-
-  const onResize = debounce(resize, 100);
-  window.addEventListener('resize', onResize);
-
-  canvas.addEventListener('mousemove', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    mouseX = e.clientX - rect.left;
-    mouseY = e.clientY - rect.top;
-  });
-  canvas.addEventListener('touchmove', (e) => {
-    if (e.touches.length) {
-      const rect = canvas.getBoundingClientRect();
-      mouseX = e.touches[0].clientX - rect.left;
-      mouseY = e.touches[0].clientY - rect.top;
-    }
-  }, { passive: true });
-
-  draw();
-}
-
-function debounce(fn, ms) {
-  let t;
-  return function () {
-    clearTimeout(t);
-    t = setTimeout(fn, ms);
-  };
-}
-
-export function destroyParticles() {
-  cancelAnimationFrame(rafId);
-}
+  function animate() {
+    particles.forEach(function (p) {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > 100) p.vx *= -1;
+      if (p.y < 0 || p.y > 100) p.vy *= -1;
+      p.el.style.left = p.x + '%';
+      p.el.style.top = p.y + '%';
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();

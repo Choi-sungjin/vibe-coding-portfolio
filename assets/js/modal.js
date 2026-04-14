@@ -1,68 +1,49 @@
 /**
- * modal.js — 프로젝트 상세 모달
+ * 프로젝트 상세 모달: 열기/닫기, ESC/오버레이
  */
+(function () {
+  var overlay = document.getElementById('projectModal');
+  var closeBtn = document.getElementById('projectModalClose');
+  var bodyEl = document.getElementById('projectModalBody');
+  var titleEl = document.getElementById('projectModalTitle');
 
-let currentModal = null;
+  if (!overlay) return;
 
-export function openModal(project) {
-  const container = document.getElementById('modal-container');
-  if (!container) return;
-
-  const backdrop = document.createElement('div');
-  backdrop.className = 'modal-backdrop';
-  backdrop.setAttribute('role', 'dialog');
-  backdrop.setAttribute('aria-modal', 'true');
-  backdrop.setAttribute('aria-labelledby', 'modal-title');
-
-  const content = document.createElement('div');
-  content.className = 'modal-content';
-
-  const tagsHtml = (project.tags || [])
-    .map((t) => `<span class="tag">${t}</span>`)
-    .join('');
-
-  content.innerHTML = `
-    <div class="modal-header">
-      <h2 id="modal-title" class="section-title">${project.title}</h2>
-      <button type="button" class="modal-close" aria-label="모달 닫기">&times;</button>
-    </div>
-    <div class="modal-body">
-      ${project.image ? `<div class="project-card-thumb"><img src="${project.image}" alt="${project.title}" loading="lazy"></div>` : ''}
-      <p class="project-card-desc">${project.description || ''}</p>
-      <div class="project-tags">${tagsHtml}</div>
-      ${project.github ? `<a href="${project.github}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub</a>` : ''}
-      ${project.demo ? `<a href="${project.demo}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">라이브 데모</a>` : ''}
-    </div>
-  `;
-
-  backdrop.appendChild(content);
-  container.appendChild(backdrop);
-
-  const close = () => {
-    backdrop.classList.remove('open');
-    setTimeout(() => backdrop.remove(), 300);
-    currentModal = null;
-    document.body.style.overflow = '';
+  var projects = {
+    1: { title: 'Project 01', desc: 'Fullstack Web App — 프론트엔드·백엔드·DB 연동 풀스택 서비스입니다. React, Node.js, PostgreSQL를 사용해 구현했습니다.', stack: 'React, Node.js, PostgreSQL, TypeScript' },
+    2: { title: 'Project 02', desc: 'REST API Server — 인증·CRUD·파일 업로드 API 서버입니다. Express, MongoDB, JWT를 활용했습니다.', stack: 'Express, MongoDB, JWT' },
+    3: { title: 'Project 03', desc: 'React SPA — 상태관리·라우팅·반응형 UI를 갖춘 단일 페이지 애플리케이션입니다.', stack: 'React, TypeScript, Vite' }
   };
 
-  content.querySelector('.modal-close')?.addEventListener('click', close);
-  backdrop.addEventListener('click', (e) => {
-    if (e.target === backdrop) close();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') close();
-  });
+  function openModal(projectId) {
+    var p = projects[projectId];
+    if (p && titleEl && bodyEl) {
+      titleEl.textContent = p.title;
+      bodyEl.innerHTML = '<p>' + p.desc + '</p><p><strong>기술 스택:</strong> ' + p.stack + '</p>';
+    }
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
 
-  document.body.style.overflow = 'hidden';
-  requestAnimationFrame(() => backdrop.classList.add('open'));
-  currentModal = backdrop;
-}
-
-export function closeModal() {
-  if (currentModal) {
-    currentModal.classList.remove('open');
-    setTimeout(() => currentModal.remove(), 300);
-    currentModal = null;
+  function closeModal() {
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }
-}
+
+  document.querySelectorAll('.project-detail-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = this.getAttribute('data-project');
+      if (id) openModal(id);
+    });
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeModal();
+  });
+})();

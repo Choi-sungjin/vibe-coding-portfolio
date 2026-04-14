@@ -1,36 +1,37 @@
 /**
- * tab.js — 스킬 카테고리 탭 전환
+ * 스킬 카테고리 탭 전환
  */
-
-const TAB_SELECTOR = '.skills-tab';
-const PANEL_SELECTOR = '.skills-panel';
-
-export function initTabs() {
-  const tabs = document.querySelectorAll(TAB_SELECTOR);
-  const panels = document.querySelectorAll(PANEL_SELECTOR);
+(function () {
+  var tabs = document.querySelectorAll('.skill-tab[data-skill]');
+  var panels = document.querySelectorAll('.skill-panel[data-panel]');
   if (!tabs.length || !panels.length) return;
 
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      const targetId = tab.getAttribute('data-tab');
-      if (!targetId) return;
-
-      tabs.forEach((t) => {
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var skill = this.getAttribute('data-skill');
+      tabs.forEach(function (t) {
         t.classList.remove('active');
         t.setAttribute('aria-selected', 'false');
       });
-      tab.classList.add('active');
-      tab.setAttribute('aria-selected', 'true');
+      this.classList.add('active');
+      this.setAttribute('aria-selected', 'true');
 
-      panels.forEach((panel) => {
-        const panelId = panel.id || '';
-        const isActive = panelId === `panel-${targetId}`;
-        panel.classList.toggle('active', isActive);
-        panel.setAttribute('aria-hidden', !isActive);
-        if (isActive) {
-          panel.querySelectorAll('.skill-card').forEach((card) => card.classList.add('visible'));
+      panels.forEach(function (panel) {
+        if (panel.getAttribute('data-panel') === skill) {
+          panel.classList.add('active');
+          panel.removeAttribute('hidden');
+          panel.setAttribute('role', 'tabpanel');
+          var cards = panel.querySelectorAll('.skill-card.fade-up');
+          cards.forEach(function (card, i) {
+            setTimeout(function () {
+              card.classList.add('visible');
+            }, i * 50);
+          });
+        } else {
+          panel.classList.remove('active');
+          panel.setAttribute('hidden', '');
         }
       });
     });
   });
-}
+})();

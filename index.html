@@ -3,273 +3,354 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>최성진 | Fullstack Developer Portfolio</title>
-  <meta name="description" content="풀스택 개발자 최성진 포트폴리오. 웹 서비스의 처음부터 끝까지, 아이디어를 현실로 만드는 개발자입니다.">
-  <meta property="og:title" content="최성진 | Fullstack Developer Portfolio">
-  <meta property="og:description" content="풀스택 개발자 최성진 포트폴리오. 웹 서비스의 처음부터 끝까지, 아이디어를 현실로 만드는 개발자입니다.">
-  <meta property="og:image" content="assets/images/og-image.png">
+  <meta name="description" content="최성진(Choi Seongjin) — Web & PLC Automation Engineer Portfolio. 웹 서비스 개발부터 PLC 기반 산업 자동화까지 연결하는 엔지니어입니다.">
+  <meta name="keywords" content="최성진, Choi Seongjin, Web Developer, PLC Automation Engineer, PLC, 산업자동화, 포트폴리오, 프론트엔드, 백엔드">
+  <meta property="og:title" content="최성진 | Web & PLC Automation Engineer">
+  <meta property="og:description" content="웹 개발과 PLC 기반 자동화를 함께 다루는 최성진의 포트폴리오입니다. React, Node.js, TypeScript와 산업 자동화 역량을 소개합니다.">
   <meta property="og:type" content="website">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>">
+  <meta property="og:locale" content="ko_KR">
+  <title>최성진 | Web & PLC Automation Engineer</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='24' font-size='24'>💜</text></svg>">
   <link rel="stylesheet" href="assets/css/reset.css">
   <link rel="stylesheet" href="assets/css/variables.css">
   <link rel="stylesheet" href="assets/css/global.css">
   <link rel="stylesheet" href="assets/css/layout.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/sections.css">
-  <link rel="stylesheet" href="assets/css/mobile.css">
   <link rel="stylesheet" href="assets/css/animations.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/font/devicon.min.css">
+  <link rel="stylesheet" href="assets/css/mobile.css">
 </head>
 <body>
-  <div id="scroll-progress" class="scroll-progress" role="progressbar" aria-label="페이지 스크롤 진행률"></div>
+  <!-- 스크롤 진행률 바 -->
+  <div class="progress-bar" role="presentation" aria-hidden="true">
+    <div class="fill" id="progressFill"></div>
+  </div>
 
-  <header id="header-container" class="site-header" role="banner">
-    <a href="#" class="logo" aria-label="최성진 포트폴리오 홈">CSJ.</a>
-    <nav class="nav-desktop" aria-label="메인 메뉴">
-      <a href="#about" data-section="about">ABOUT</a>
-      <a href="#skills" data-section="skills">SKILLS</a>
-      <a href="#works" data-section="works">WORKS</a>
-      <a href="#contact" data-section="contact">CONTACT</a>
-    </nav>
-    <button type="button" class="nav-toggle" aria-label="메뉴 열기">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="nav-overlay" id="nav-overlay" aria-hidden="true">
-      <a href="#about">ABOUT</a>
-      <a href="#skills">SKILLS</a>
-      <a href="#works">WORKS</a>
-      <a href="#contact">CONTACT</a>
+  <!-- Section 1: Header (components/header.html에서 로드) -->
+  <div id="header-container"></div>
+
+  <!-- 모바일 풀스크린 메뉴 -->
+  <div class="nav-overlay" id="navOverlay" aria-hidden="true">
+    <button type="button" class="close-btn" id="navClose" aria-label="메뉴 닫기">×</button>
+    <a href="#about" id="navLinkAbout">ABOUT</a>
+    <a href="#skills" id="navLinkSkills">SKILLS</a>
+    <a href="#works" id="navLinkWorks">WORKS</a>
+    <a href="#contact" id="navLinkContact">CONTACT</a>
+  </div>
+
+  <!-- Section 2: Hero -->
+  <section class="hero" id="hero" aria-label="메인 소개">
+    <div class="hero-bg-particles" id="heroParticles" aria-hidden="true"></div>
+    <div class="hero-code-watermark" aria-hidden="true">
+      <span style="top:10%;left:5%;">const</span>
+      <span style="top:20%;right:10%;">function()</span>
+      <span style="top:40%;left:15%;">{}</span>
+      <span style="top:60%;right:5%;">=&gt;</span>
+      <span style="top:75%;left:8%;">async/await</span>
+      <span style="top:85%;right:20%;">import</span>
     </div>
-  </header>
-
-  <main>
-    <section class="hero" id="hero" aria-label="히어로 섹션">
-      <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
-      <div class="hero-code-bg" id="hero-code-bg" aria-hidden="true"></div>
-      <div class="hero-inner container">
-        <div class="hero-content">
-          <p class="eyebrow fade-in">안녕하세요 👋</p>
-          <h1 class="hero-name fade-in">최성진</h1>
-          <p class="typing-wrap fade-in">
-            <span id="typing-text"></span><span class="cursor" id="typing-cursor">|</span>
-          </p>
-          <p class="hero-desc fade-in">
-            웹 서비스의 처음부터 끝까지,<br>
-            아이디어를 현실로 만드는<br>
-            풀스택 개발자입니다.
-          </p>
-          <div class="hero-cta fade-in">
-            <a href="#works" class="btn btn-primary">프로젝트 보기</a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub 방문</a>
-          </div>
-        </div>
-        <div class="hero-editor fade-in" aria-label="개발자 정보 코드 스니펫">
-          <div class="hero-editor-header">
-            <span class="hero-editor-dot red"></span>
-            <span class="hero-editor-dot yellow"></span>
-            <span class="hero-editor-dot green"></span>
-            <span class="hero-editor-title">📄 about.js</span>
-          </div>
-          <div class="hero-editor-body">
-            <div><span class="code-key">const</span> developer = {</div>
-            <div>&nbsp;&nbsp;name: <span class="code-string">"최성진"</span>,</div>
-            <div>&nbsp;&nbsp;role: <span class="code-string">"Fullstack Dev"</span>,</div>
-            <div>&nbsp;&nbsp;stack: [<span class="code-string">"React"</span>, <span class="code-string">"Node"</span>, <span class="code-string">"TypeScript"</span>, ...],</div>
-            <div>&nbsp;&nbsp;coffee: <span class="code-bool">true</span>, ☕</div>
-            <div>&nbsp;&nbsp;openToWork: <span class="code-bool">true</span> ✅</div>
-            <div>}</div>
-          </div>
+    <div class="hero-inner">
+      <div class="hero-content">
+        <p class="eyebrow fade-in">안녕하세요 👋</p>
+        <h1 class="name">최성진</h1>
+        <div class="typing-wrap" id="typingTarget" aria-live="polite">Web &amp; PLC Automation Engineer</div>
+        <p class="desc">
+          웹 서비스의 처음부터 끝까지,<br>
+          아이디어를 현실로 만들고<br>
+          PLC 기반 자동화까지 연결합니다.
+        </p>
+        <div class="cta-wrap">
+          <a href="#works" class="btn-cta">프로젝트 보기</a>
+          <a href="https://github.com" class="btn-outline" target="_blank" rel="noopener noreferrer">GitHub 방문</a>
         </div>
       </div>
-      <div class="hero-scroll-hint" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-      </div>
-    </section>
-
-    <section class="marquee-strip" aria-label="기술 스택 마퀴">
-      <div class="marquee-content">
-        <span>⚡ React</span>
-        <span>Next.js</span>
-        <span>TypeScript</span>
-        <span>Node.js</span>
-        <span>Express</span>
-        <span>PostgreSQL</span>
-        <span>MongoDB</span>
-        <span>Redis</span>
-        <span>Docker</span>
-        <span>AWS</span>
-        <span>Git</span>
-        <span>Tailwind CSS</span>
-        <span>GraphQL</span>
-        <span>REST API</span>
-        <span>최성진 포트폴리오 ✨</span>
-        <span>⚡ React</span>
-        <span>Next.js</span>
-        <span>TypeScript</span>
-        <span>Node.js</span>
-        <span>Express</span>
-        <span>PostgreSQL</span>
-        <span>MongoDB</span>
-        <span>Redis</span>
-        <span>Docker</span>
-        <span>AWS</span>
-        <span>Git</span>
-        <span>Tailwind CSS</span>
-        <span>GraphQL</span>
-        <span>REST API</span>
-        <span>최성진 포트폴리오 ✨</span>
-      </div>
-    </section>
-
-    <section class="section about-section" id="about" aria-labelledby="about-title">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-title-wrap">
-            <span class="section-title-decoration">ABOUT</span>
-            <h2 id="about-title" class="section-title">About Me</h2>
-          </div>
+      <div class="code-editor-card">
+        <div class="title-bar">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+          <span class="filename">📄 about.js</span>
         </div>
-        <div class="grid-2">
-          <div class="about-profile-wrap">
-            <div class="about-avatar" id="about-avatar">
-              <span aria-hidden="true">CSJ</span>
-            </div>
-            <span class="about-badge">🟢 Available for Work</span>
-          </div>
-          <div>
-            <p class="about-intro">풀스택 개발자 최성진입니다.</p>
-            <p>웹과 앱, 클라우드까지 폭넓은 관심을 가지고 있습니다. 사용자 경험과 안정적인 백엔드를 함께 고민하며, 아이디어를 실제 서비스로 구현하는 것을 좋아합니다.</p>
-            <p>협업과 소통을 중시하고, 지속적으로 새로운 기술을 학습합니다. 함께 성장할 수 있는 기회를 기다리고 있습니다.</p>
-            <ul class="about-info-list">
-              <li><span class="label">📍 위치</span> 대한민국</li>
-              <li><span class="label">💼 직군</span> Fullstack Developer</li>
-              <li><span class="label">🎓 관심분야</span> Web / App / Cloud</li>
-              <li><span class="label">📧 이메일</span> <a href="#" id="copy-email" data-email="hello@choiseongjin.dev">hello@choiseongjin.dev</a></li>
-            </ul>
-            <a href="#" class="btn btn-outline" download aria-label="이력서 다운로드">📄 이력서 다운로드</a>
-          </div>
+        <div class="code-body cursor-blink">
+          <div class="line"><span class="key">const</span> developer = {</div>
+          <div class="line">  name: <span class="string">"최성진"</span>,</div>
+          <div class="line">  role: <span class="string">"Web & PLC Automation Engineer"</span>,</div>
+          <div class="line">  stack: [<span class="string">"React"</span>, <span class="string">"Node"</span>, <span class="string">"TypeScript"</span>, <span class="string">"PLC"</span>, ...],</div>
+          <div class="line">  coffee: <span class="bool">true</span>, ☕</div>
+          <div class="line">  openToWork: <span class="bool">true</span> ✅</div>
+          <div class="line">}</div>
         </div>
       </div>
-    </section>
-
-    <section class="section skills-section" id="skills" aria-labelledby="skills-title">
-      <div class="container">
-        <h2 id="skills-title" class="section-title">Tech Stack</h2>
-        <p class="section-subtitle">사용 가능한 기술 스택</p>
-        <div class="skills-tabs" role="tablist" aria-label="스킬 카테고리 탭">
-          <button type="button" class="skills-tab active" role="tab" aria-selected="true" data-tab="frontend">💻 Frontend</button>
-          <button type="button" class="skills-tab" role="tab" aria-selected="false" data-tab="backend">⚙️ Backend</button>
-          <button type="button" class="skills-tab" role="tab" aria-selected="false" data-tab="database">🗄️ Database</button>
-          <button type="button" class="skills-tab" role="tab" aria-selected="false" data-tab="devops">🔧 DevOps</button>
-          <button type="button" class="skills-tab" role="tab" aria-selected="false" data-tab="tools">🎨 Tools</button>
-        </div>
-        <div id="skills-panels">
-          <div class="skills-panel active" id="panel-frontend" role="tabpanel" aria-labelledby="skills-title"></div>
-          <div class="skills-panel" id="panel-backend" role="tabpanel" aria-hidden="true"></div>
-          <div class="skills-panel" id="panel-database" role="tabpanel" aria-hidden="true"></div>
-          <div class="skills-panel" id="panel-devops" role="tabpanel" aria-hidden="true"></div>
-          <div class="skills-panel" id="panel-tools" role="tabpanel" aria-hidden="true"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section stats-section" id="stats" aria-labelledby="stats-title">
-      <div class="container">
-        <div class="stats-grid" id="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">☕</div>
-            <div class="stat-value" data-target="999">0</div>
-            <div class="stat-label">마신 커피</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">💻</div>
-            <div class="stat-value" data-target="50000">0</div>
-            <div class="stat-label">작성한 코드</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">🚀</div>
-            <div class="stat-value" data-target="10">0</div>
-            <div class="stat-label">완성한 프로젝트</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">📚</div>
-            <div class="stat-value" data-target="30">0</div>
-            <div class="stat-label">공부한 기술</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section works-section" id="works" aria-labelledby="works-title">
-      <div class="container">
-        <h2 id="works-title" class="section-title">Works</h2>
-        <p class="section-subtitle">직접 기획하고 개발한 프로젝트</p>
-        <div class="works-grid" id="works-grid"></div>
-        <div class="works-more">
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub에서 더 보기</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section contact-section" id="contact" aria-labelledby="contact-title">
-      <div class="container">
-        <h2 id="contact-title" class="section-title">Contact</h2>
-        <p class="section-subtitle">함께 일하고 싶다면 언제든 연락주세요</p>
-        <div class="contact-grid">
-          <div class="contact-list">
-            <div class="contact-item" id="contact-email" data-value="hello@choiseongjin.dev" role="button" tabindex="0">
-              <span class="icon">📧</span>
-              <span>이메일</span>
-            </div>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="contact-item">
-              <span class="icon">🐙</span>
-              <span>GitHub</span>
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="contact-item">
-              <span class="icon">💼</span>
-              <span>LinkedIn</span>
-            </a>
-            <div class="contact-item">
-              <span class="icon">📱</span>
-              <span>연락처</span>
-            </div>
-          </div>
-          <form class="contact-form" id="contact-form" aria-label="문의 폼">
-            <div class="form-group">
-              <label for="form-name">이름</label>
-              <input type="text" id="form-name" placeholder="홍길동" autocomplete="name" aria-label="이름 입력">
-            </div>
-            <div class="form-group">
-              <label for="form-email">이메일</label>
-              <input type="email" id="form-email" placeholder="email@example.com" autocomplete="email" aria-label="이메일 입력">
-            </div>
-            <div class="form-group">
-              <label for="form-message">메시지</label>
-              <textarea id="form-message" placeholder="안녕하세요! 함께 일하고 싶어 연락드립니다." aria-label="메시지 입력"></textarea>
-            </div>
-            <button type="submit" class="btn btn-submit" id="form-submit">보내기</button>
-          </form>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer" role="contentinfo">
-    <div class="footer-logo">CSJ.</div>
-    <p class="footer-slogan">코드로 아이디어를 현실로 만드는 개발자, 최성진</p>
-    <div class="footer-links">
-      <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub 열기">GitHub</a>
-      <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn 열기">LinkedIn</a>
-      <a href="#" id="footer-email" aria-label="이메일 복사">이메일</a>
     </div>
-    <p class="copyright">© 2024 Choi Seongjin. Designed & Developed by 최성진.</p>
-  </footer>
+    <div class="scroll-hint bounce-scroll" aria-hidden="true">
+      <span>스크롤</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+  </section>
 
-  <button type="button" class="btn-top" id="btn-top" aria-label="맨 위로 이동">↑ TOP</button>
+  <!-- Section 3: Marquee -->
+  <section class="marquee-strip" aria-label="기술 스택 마퀴">
+    <div class="marquee-inner">
+      <span>⚡ React</span>
+      <span>Next.js</span>
+      <span>TypeScript</span>
+      <span>Node.js</span>
+      <span>PLC</span>
+      <span>Structured Text</span>
+      <span>Express</span>
+      <span>PostgreSQL</span>
+      <span>MongoDB</span>
+      <span>Redis</span>
+      <span>Docker</span>
+      <span>AWS</span>
+      <span>Industrial Automation</span>
+      <span>Git</span>
+      <span>Tailwind CSS</span>
+      <span>GraphQL</span>
+      <span>REST API</span>
+      <span>Physical AI Interest</span>
+      <span>최성진 포트폴리오 ✨</span>
+      <span>⚡ React</span>
+      <span>Next.js</span>
+      <span>TypeScript</span>
+      <span>Node.js</span>
+      <span>PLC</span>
+      <span>Structured Text</span>
+      <span>Express</span>
+      <span>PostgreSQL</span>
+      <span>MongoDB</span>
+      <span>Redis</span>
+      <span>Docker</span>
+      <span>AWS</span>
+      <span>Industrial Automation</span>
+      <span>Git</span>
+      <span>Tailwind CSS</span>
+      <span>GraphQL</span>
+      <span>REST API</span>
+      <span>Physical AI Interest</span>
+      <span>최성진 포트폴리오 ✨</span>
+    </div>
+  </section>
 
-  <div id="toast-container" aria-live="polite"></div>
-  <div id="modal-container"></div>
+  <!-- Section 4: About -->
+  <section class="about-section" id="about" aria-label="소개">
+    <div class="container">
+      <div class="section-head">
+        <div class="title-wrap">
+          <span class="title-vertical">ABOUT</span>
+          <h2 class="section-title">About Me</h2>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="profile-wrap">
+          <div class="profile-avatar" aria-hidden="true">CSJ</div>
+          <div class="profile-badge">🟢 Available for Work</div>
+        </div>
+        <div class="about-text">
+          <p class="intro">웹 개발과 PLC 자동화를 함께 다루는 엔지니어 최성진입니다.</p>
+          <p>웹과 앱, 클라우드까지 사용자 경험과 서버 안정성을 함께 고민하며 개발합니다.</p>
+          <p>현장에서는 PLC 기반 시퀀스 제어, 인터락 설계, 센서·액추에이터 연동, 트러블슈팅 관점으로 자동화 문제를 풀어왔습니다.</p>
+          <p>새로운 기술을 배우고 실제 프로젝트에 적용하는 것을 좋아하며, 산업 자동화와 피지컬 AI가 만나는 지점에도 관심을 넓히고 있습니다.</p>
+          <div class="about-focus-card fade-up">
+            <span class="focus-label">PLC + Software</span>
+            <h3>현장 제어 경험을 소프트웨어 문제 해결력으로 확장합니다.</h3>
+            <p>시퀀스 제어와 안전 인터락, 센서·액추에이터 이해, 현장 디버깅 감각을 웹과 자동화 시스템을 잇는 실행력으로 연결합니다.</p>
+          </div>
+          <ul class="about-info">
+            <li><strong>📍 위치</strong> 대한민국</li>
+            <li><strong>💼 직군</strong> Web &amp; PLC Automation Engineer</li>
+            <li><strong>🎓 관심분야</strong> Web / App / Cloud / Automation / Physical AI</li>
+            <li><strong>📧 이메일</strong> <button type="button" class="copy-email" id="copyEmail" data-email="hello@choiseongjin.dev">hello@choiseongjin.dev</button></li>
+          </ul>
+          <a href="#" class="btn-resume" download aria-label="이력서 다운로드">📄 이력서 다운로드</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <script type="module" src="assets/js/main.js"></script>
+  <!-- Section 5: Skills -->
+  <section class="skills-section" id="skills" aria-label="기술 스택">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">Tech Stack</h2>
+        <p class="section-desc">웹 개발부터 PLC 기반 자동화까지 다루는 기술 스택</p>
+      </div>
+      <div class="skill-tabs" role="tablist">
+        <button type="button" class="skill-tab active" data-skill="frontend" role="tab" aria-selected="true">💻 Frontend</button>
+        <button type="button" class="skill-tab" data-skill="backend" role="tab" aria-selected="false">⚙️ Backend</button>
+        <button type="button" class="skill-tab" data-skill="database" role="tab" aria-selected="false">🗄️ Database</button>
+        <button type="button" class="skill-tab" data-skill="devops" role="tab" aria-selected="false">🔧 DevOps</button>
+        <button type="button" class="skill-tab" data-skill="automation" role="tab" aria-selected="false">🏭 Automation</button>
+        <button type="button" class="skill-tab" data-skill="tools" role="tab" aria-selected="false">🎨 Tools</button>
+      </div>
+      <div id="skillPanels">
+        <div class="skill-panel active grid-4" data-panel="frontend" role="tabpanel">
+          <div class="skill-card fade-up"><span class="icon">🟠</span><span class="name">HTML5</span></div>
+          <div class="skill-card fade-up"><span class="icon">🔵</span><span class="name">CSS3</span></div>
+          <div class="skill-card fade-up"><span class="icon">🟡</span><span class="name">JavaScript (ES6+)</span></div>
+          <div class="skill-card fade-up"><span class="icon">🔷</span><span class="name">TypeScript</span></div>
+          <div class="skill-card fade-up"><span class="icon">⚛️</span><span class="name">React</span></div>
+          <div class="skill-card fade-up"><span class="icon">▲</span><span class="name">Next.js</span></div>
+          <div class="skill-card fade-up"><span class="icon">💚</span><span class="name">Vue.js</span></div>
+          <div class="skill-card fade-up"><span class="icon">🎨</span><span class="name">Tailwind CSS</span></div>
+        </div>
+        <div class="skill-panel grid-4" data-panel="backend" role="tabpanel" hidden>
+          <div class="skill-card fade-up"><span class="icon">🟢</span><span class="name">Node.js</span></div>
+          <div class="skill-card fade-up"><span class="icon">📦</span><span class="name">Express.js</span></div>
+          <div class="skill-card fade-up"><span class="icon">🟢</span><span class="name">NestJS</span></div>
+          <div class="skill-card fade-up"><span class="icon">🐍</span><span class="name">Python</span></div>
+          <div class="skill-card fade-up"><span class="icon">⚡</span><span class="name">FastAPI</span></div>
+          <div class="skill-card fade-up"><span class="icon">🔗</span><span class="name">REST API</span></div>
+          <div class="skill-card fade-up"><span class="icon">📊</span><span class="name">GraphQL</span></div>
+          <div class="skill-card fade-up"><span class="icon">🔌</span><span class="name">WebSocket</span></div>
+        </div>
+        <div class="skill-panel grid-4" data-panel="database" role="tabpanel" hidden>
+          <div class="skill-card fade-up"><span class="icon">🐘</span><span class="name">PostgreSQL</span></div>
+          <div class="skill-card fade-up"><span class="icon">🐬</span><span class="name">MySQL</span></div>
+          <div class="skill-card fade-up"><span class="icon">🍃</span><span class="name">MongoDB</span></div>
+          <div class="skill-card fade-up"><span class="icon">🔴</span><span class="name">Redis</span></div>
+          <div class="skill-card fade-up"><span class="icon">🔥</span><span class="name">Firebase</span></div>
+          <div class="skill-card fade-up"><span class="icon">⚡</span><span class="name">Supabase</span></div>
+        </div>
+        <div class="skill-panel grid-4" data-panel="devops" role="tabpanel" hidden>
+          <div class="skill-card fade-up"><span class="icon">🐳</span><span class="name">Docker</span></div>
+          <div class="skill-card fade-up"><span class="icon">☸️</span><span class="name">Kubernetes</span></div>
+          <div class="skill-card fade-up"><span class="icon">☁️</span><span class="name">AWS</span></div>
+          <div class="skill-card fade-up"><span class="icon">▲</span><span class="name">Vercel</span></div>
+          <div class="skill-card fade-up"><span class="icon">🔄</span><span class="name">GitHub Actions</span></div>
+        </div>
+        <div class="skill-panel grid-4" data-panel="automation" role="tabpanel" hidden>
+          <div class="skill-card fade-up"><span class="icon">⚡</span><span class="name">PLC Programming</span></div>
+          <div class="skill-card fade-up"><span class="icon">🧠</span><span class="name">Structured Text</span></div>
+          <div class="skill-card fade-up"><span class="icon">🪜</span><span class="name">Ladder Logic</span></div>
+          <div class="skill-card fade-up"><span class="icon">📟</span><span class="name">HMI / SCADA</span></div>
+          <div class="skill-card fade-up"><span class="icon">🌐</span><span class="name">Industrial Networks</span></div>
+          <div class="skill-card fade-up"><span class="icon">🧲</span><span class="name">Sensor / Actuator I/O</span></div>
+          <div class="skill-card fade-up"><span class="icon">🛡️</span><span class="name">Interlock & Safety</span></div>
+          <div class="skill-card fade-up"><span class="icon">🧰</span><span class="name">Field Troubleshooting</span></div>
+        </div>
+        <div class="skill-panel grid-4" data-panel="tools" role="tabpanel" hidden>
+          <div class="skill-card fade-up"><span class="icon">📌</span><span class="name">Git</span></div>
+          <div class="skill-card fade-up"><span class="icon">🐙</span><span class="name">GitHub</span></div>
+          <div class="skill-card fade-up"><span class="icon">🎨</span><span class="name">Figma</span></div>
+          <div class="skill-card fade-up"><span class="icon">📮</span><span class="name">Postman</span></div>
+          <div class="skill-card fade-up"><span class="icon">💻</span><span class="name">VS Code</span></div>
+          <div class="skill-card fade-up"><span class="icon">📝</span><span class="name">Notion</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Stats -->
+  <section class="stats-section" id="stats" aria-label="통계">
+    <div class="container">
+      <h2 class="section-title">숫자로 보는 나</h2>
+      <div class="grid-stats">
+        <div class="stat-card"><div class="icon">☕</div><div class="number" data-count="999" data-suffix="+">0</div><div class="label">마신 커피</div></div>
+        <div class="stat-card"><div class="icon">💻</div><div class="number" data-count="50000" data-suffix="+">0</div><div class="label">작성한 코드 (줄)</div></div>
+        <div class="stat-card"><div class="icon">🚀</div><div class="number" data-count="10" data-suffix="+">0</div><div class="label">완성한 프로젝트</div></div>
+        <div class="stat-card"><div class="icon">📚</div><div class="number" data-count="30" data-suffix="+">0</div><div class="label">공부한 기술</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 7: Works -->
+  <section class="works-section" id="works" aria-label="프로젝트">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">Works</h2>
+        <p class="section-desc">직접 기획하고 개발한 프로젝트</p>
+      </div>
+      <div class="grid-3" id="worksGrid">
+        <article class="project-card fade-up">
+          <div class="thumb">
+            <div class="overlay"><button type="button" class="btn-cta project-detail-btn" data-project="1">자세히 보기</button></div>
+          </div>
+          <div class="body">
+            <h3 class="title">Project 01</h3>
+            <p class="desc">Fullstack Web App — 프론트·백엔드·DB 연동 풀스택 서비스</p>
+            <div class="tags"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">PostgreSQL</span></div>
+            <div class="links"><a href="#" class="btn-github">GitHub</a><a href="#" class="btn-demo">라이브 데모</a></div>
+          </div>
+        </article>
+        <article class="project-card fade-up">
+          <div class="thumb">
+            <div class="overlay"><button type="button" class="btn-cta project-detail-btn" data-project="2">자세히 보기</button></div>
+          </div>
+          <div class="body">
+            <h3 class="title">Project 02</h3>
+            <p class="desc">REST API Server — 인증·CRUD·파일 업로드 API</p>
+            <div class="tags"><span class="tag">Express</span><span class="tag">MongoDB</span><span class="tag">JWT</span></div>
+            <div class="links"><a href="#" class="btn-github">GitHub</a><a href="#" class="btn-demo">라이브 데모</a></div>
+          </div>
+        </article>
+        <article class="project-card fade-up">
+          <div class="thumb">
+            <div class="overlay"><button type="button" class="btn-cta project-detail-btn" data-project="3">자세히 보기</button></div>
+          </div>
+          <div class="body">
+            <h3 class="title">Project 03</h3>
+            <p class="desc">React SPA — 상태관리·라우팅·반응형 UI</p>
+            <div class="tags"><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Vite</span></div>
+            <div class="links"><a href="#" class="btn-github">GitHub</a><a href="#" class="btn-demo">라이브 데모</a></div>
+          </div>
+        </article>
+      </div>
+      <a href="https://github.com" class="btn-outline btn-more" target="_blank" rel="noopener noreferrer">GitHub에서 더 보기</a>
+    </div>
+  </section>
+
+  <!-- Section 8: Contact -->
+  <section class="contact-section" id="contact" aria-label="연락처">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">Contact</h2>
+        <p class="section-desc">함께 일하고 싶다면 언제든 연락주세요</p>
+      </div>
+      <div class="grid-2">
+        <ul class="contact-info">
+          <li><a href="#" id="contactEmail"><span class="icon">📧</span> 이메일</a></li>
+          <li><a href="https://github.com" target="_blank" rel="noopener noreferrer"><span class="icon">🐙</span> GitHub</a></li>
+          <li><a href="#" target="_blank" rel="noopener noreferrer"><span class="icon">💼</span> LinkedIn</a></li>
+        </ul>
+        <form class="contact-form" id="contactForm" aria-label="문의 폼">
+          <div class="form-group">
+            <label for="formName">이름</label>
+            <input type="text" id="formName" placeholder="홍길동" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="formEmail">이메일</label>
+            <input type="email" id="formEmail" placeholder="email@example.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="formMessage">메시지</label>
+            <textarea id="formMessage" placeholder="안녕하세요! 협업·문의 내용을 남겨주세요."></textarea>
+          </div>
+          <button type="submit" class="btn-submit" id="formSubmit">보내기</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 9: Footer (components/footer.html에서 로드) -->
+  <div id="footer-container"></div>
+
+  <!-- TOP 버튼 -->
+  <button type="button" class="btn-top" id="btnTop" aria-label="맨 위로">↑ TOP</button>
+
+  <!-- 토스트 -->
+  <div class="toast" id="toast" role="status" aria-live="polite">복사됨!</div>
+
+  <!-- 프로젝트 상세 모달 (내용은 JS에서 주입) -->
+  <div class="modal-overlay" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle" aria-hidden="true">
+    <div class="modal-box" id="projectModalBox">
+      <button type="button" class="modal-close" id="projectModalClose" aria-label="닫기">×</button>
+      <div class="modal-header"><h3 id="projectModalTitle">프로젝트 상세</h3></div>
+      <div class="modal-body" id="projectModalBody"></div>
+    </div>
+  </div>
+
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/components-loader.js"></script>
 </body>
 </html>

@@ -1,80 +1,55 @@
 /**
- * scroll.js — 헤더 스크롤 감지, 프로그레스 바, 섹션 활성화
+ * 스크롤: 헤더 숨김/표시, 진행률 바, 섹션 네비 활성화
  */
+(function () {
+  var lastScrollY = window.scrollY || 0;
+  var header = document.getElementById('siteHeader');
+  var progressFill = document.getElementById('progressFill');
+  var navLinks = document.querySelectorAll('.nav-link[data-nav]');
 
-const HEADER = document.querySelector('.site-header');
-const PROGRESS = document.getElementById('scroll-progress');
-const SECTIONS = document.querySelectorAll('section[id]');
-const NAV_LINKS = document.querySelectorAll('.nav-desktop a[data-section], .nav-overlay a[href^="#"]');
+  function onScroll() {
+    var y = window.scrollY || 0;
 
-let lastScrollY = window.scrollY;
-let ticking = false;
-
-function updateProgress() {
-  const h = document.documentElement.scrollHeight - window.innerHeight;
-  const p = h > 0 ? (window.scrollY / h) * 100 : 0;
-  if (PROGRESS) {
-    PROGRESS.style.width = `${p}%`;
-    PROGRESS.setAttribute('aria-valuenow', Math.round(p));
-    PROGRESS.setAttribute('aria-valuemax', 100);
-  }
-}
-
-function updateHeaderVisibility() {
-  const y = window.scrollY;
-  if (y > 80) {
-    HEADER?.classList.add('scrolled');
-    const goingDown = y > lastScrollY;
-    if (goingDown && y > 200) {
-      HEADER?.classList.add('hidden');
-    } else {
-      HEADER?.classList.remove('hidden');
+    if (header) {
+      if (y > 80) {
+        header.classList.add('scrolled');
+        if (y > lastScrollY && y > 200) {
+          header.classList.add('header-hidden');
+        } else {
+          header.classList.remove('header-hidden');
+        }
+      } else {
+        header.classList.remove('scrolled', 'header-hidden');
+      }
     }
-  } else {
-    HEADER?.classList.remove('scrolled', 'hidden');
-  }
-  lastScrollY = y;
-}
 
-function updateActiveSection() {
-  const viewportMid = window.scrollY + window.innerHeight / 2;
-  let currentId = '';
-  SECTIONS.forEach((section) => {
-    const rect = section.getBoundingClientRect();
-    const top = rect.top + window.scrollY;
-    const bottom = top + rect.height;
-    if (viewportMid >= top && viewportMid <= bottom) {
-      currentId = section.id;
+    if (progressFill) {
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = docHeight > 0 ? (y / docHeight) * 100 : 0;
+      progressFill.style.width = pct + '%';
     }
-  });
-  NAV_LINKS.forEach((link) => {
-    const href = link.getAttribute('href');
-    const sectionId = href?.replace('#', '') || link.getAttribute('data-section');
-    if (sectionId === currentId) {
-      link.classList.add('active');
-      link.setAttribute('aria-current', 'location');
-    } else {
-      link.classList.remove('active');
-      link.removeAttribute('aria-current');
+
+    if (navLinks.length) {
+      var sections = [];
+      navLinks.forEach(function (a) {
+        var id = a.getAttribute('data-nav');
+        var el = document.getElementById(id);
+        if (el) sections.push({ id: id, top: el.getBoundingClientRect().top + y });
+      });
+      var current = sections.filter(function (s) { return s.top <= y + 150; }).pop();
+      var activeId = current ? current.id : (sections[0] && sections[0].id);
+      navLinks.forEach(function (a) {
+        if (a.getAttribute('data-nav') === activeId) {
+          a.classList.add('active');
+        } else {
+          a.classList.remove('active');
+        }
+      });
     }
-  });
-}
 
-function onScroll() {
-  if (!ticking) {
-    requestAnimationFrame(() => {
-      updateProgress();
-      updateHeaderVisibility();
-      updateActiveSection();
-      ticking = false;
-    });
-    ticking = true;
+    lastScrollY = y;
   }
-}
 
-export function initScroll() {
-  updateProgress();
-  updateHeaderVisibility();
-  updateActiveSection();
-  window.addEventListener('scroll', onScroll, { passive: true });
-}
+  window.addEventListener('scroll', BeautyKurly.throttle(onScroll, 100), { passive: true });
+  onScroll();
+})();

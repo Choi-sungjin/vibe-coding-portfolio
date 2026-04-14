@@ -1,71 +1,65 @@
 /**
- * utils.js — 클립보드 복사, 토스트, 디바운스 등
+ * 유틸: 디바운스, 스로틀, 토스트, 클립보드 복사
  */
-
-/**
- * 클립보드에 텍스트 복사 후 토스트 표시
- * @param {string} text
- * @param {HTMLElement} [toastContainer]
- */
-export function copyToClipboard(text, toastContainer = document.getElementById('toast-container')) {
-  if (!navigator.clipboard?.writeText) {
-    fallbackCopy(text);
-  } else {
-    navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+(function (global) {
+  function debounce(fn, ms) {
+    var t;
+    return function () {
+      var args = arguments;
+      clearTimeout(t);
+      t = setTimeout(function () { fn.apply(this, args); }.bind(this), ms);
+    };
   }
-  showToast('복사됨!', toastContainer);
-}
 
-function fallbackCopy(text) {
-  const ta = document.createElement('textarea');
-  ta.value = text;
-  ta.style.position = 'fixed';
-  ta.style.opacity = '0';
-  document.body.appendChild(ta);
-  ta.select();
-  try {
-    document.execCommand('copy');
-  } finally {
+  function throttle(fn, ms) {
+    var last = 0;
+    return function () {
+      var now = Date.now();
+      if (now - last >= ms) {
+        last = now;
+        fn.apply(this, arguments);
+      }
+    };
+  }
+
+  function showToast(message) {
+    var toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.textContent = message || '복사됨!';
+    toast.classList.add('show');
+    setTimeout(function () {
+      toast.classList.remove('show');
+    }, 2000);
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function () {
+        showToast('복사됨!');
+      }).catch(function () {
+        fallbackCopy(text);
+      });
+    }
+    fallbackCopy(text);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast('복사됨!');
+    } catch (e) {}
     document.body.removeChild(ta);
   }
-}
 
-/**
- * 토스트 메시지 표시 (2초 후 제거)
- * @param {string} message
- * @param {HTMLElement} [container]
- */
-export function showToast(message, container = document.getElementById('toast-container')) {
-  if (!container) return;
-  const existing = container.querySelector('.toast');
-  if (existing) existing.remove();
-  const toast = document.createElement('div');
-  toast.className = 'toast';
-  toast.setAttribute('role', 'status');
-  toast.textContent = message;
-  container.appendChild(toast);
-  setTimeout(() => {
-    toast.remove();
-  }, 2000);
-}
-
-/**
- * 디바운스
- * @param {Function} fn
- * @param {number} ms
- */
-export function debounce(fn, ms) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => fn.apply(this, args), ms);
-  };
-}
-
-/**
- * easeOutCubic (count-up 등)
- * @param {number} t 0~1
- */
-export function easeOutCubic(t) {
-  return 1 - Math.pow(1 - t, 3);
-}
+  global.BeautyKurly = global.BeautyKurly || {};
+  global.BeautyKurly.debounce = debounce;
+  global.BeautyKurly.throttle = throttle;
+  global.BeautyKurly.showToast = showToast;
+  global.BeautyKurly.copyToClipboard = copyToClipboard;
+})(typeof window !== 'undefined' ? window : this);

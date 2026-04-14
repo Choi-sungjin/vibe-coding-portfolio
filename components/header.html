@@ -1,18 +1,11 @@
-<header class="site-header" id="site-header" role="banner">
+<!-- 상단 헤더 (index.html에 인라인 포함) -->
+<header class="site-header header-transition" id="siteHeader" role="banner">
   <a href="#" class="logo" aria-label="최성진 포트폴리오 홈">CSJ.</a>
-  <nav class="nav-desktop" aria-label="메인 메뉴">
-    <a href="#about" data-section="about">ABOUT</a>
-    <a href="#skills" data-section="skills">SKILLS</a>
-    <a href="#works" data-section="works">WORKS</a>
-    <a href="#contact" data-section="contact">CONTACT</a>
+  <nav class="nav-desktop" aria-label="주 메뉴">
+    <a href="#about" class="nav-link" data-nav="about">ABOUT</a>
+    <a href="#skills" class="nav-link" data-nav="skills">SKILLS</a>
+    <a href="#works" class="nav-link" data-nav="works">WORKS</a>
+    <a href="#contact" class="nav-link" data-nav="contact">CONTACT</a>
   </nav>
-  <button type="button" class="nav-toggle" aria-label="메뉴 열기">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="nav-overlay" id="nav-overlay" aria-hidden="true">
-    <a href="#about">ABOUT</a>
-    <a href="#skills">SKILLS</a>
-    <a href="#works">WORKS</a>
-    <a href="#contact">CONTACT</a>
-  </div>
+  <button type="button" class="btn-menu" id="btnMenu" aria-label="메뉴 열기">☰</button>
 </header>

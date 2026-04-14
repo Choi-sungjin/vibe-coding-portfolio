@@ -1,55 +1,55 @@
-/* components.css — 버튼, 카드, 폼 등 재사용 컴포넌트 */
-/* 버튼 */
-.btn {
+/* ===== 버튼, 카드, 폼 등 ===== */
+
+/* CTA — 보라 네온 */
+.btn-cta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
-  padding: var(--space-md) var(--space-xl);
-  font-weight: 600;
-  border-radius: var(--radius-full);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.btn:focus-visible {
-  outline-offset: 3px;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--color-primary-gradient-start), var(--color-primary-gradient-end));
+  padding: 16px 32px;
+  background: var(--color-primary);
   color: var(--color-text-primary);
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: var(--radius-full);
   box-shadow: var(--shadow-glow-purple);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.btn-primary:hover {
+.btn-cta:hover {
   transform: scale(1.04);
   box-shadow: 0 0 32px rgba(176, 111, 216, 0.8);
 }
 
 .btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 14px 28px;
   background: transparent;
   color: var(--color-text-primary);
-  border: 2px solid var(--color-text-primary);
+  font-weight: 600;
+  border: 2px solid var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
 }
 
 .btn-outline:hover {
-  transform: scale(1.04);
   border-color: var(--color-neon-violet);
-  box-shadow: var(--shadow-glow-purple);
+  color: var(--color-text-primary);
+  transform: scale(1.04);
 }
 
 /* 스킬 카드 */
 .skill-card {
   background: var(--color-bg-glass);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-sm);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  text-align: center;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
 }
 
 .skill-card:hover {
@@ -58,21 +58,26 @@
   box-shadow: var(--shadow-glow-purple);
 }
 
-.skill-card .skill-icon {
+.skill-card .icon {
   width: 48px;
   height: 48px;
-  object-fit: contain;
-  transition: filter 0.3s ease;
+  margin: 0 auto var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--color-text-muted);
+  transition: color 0.2s;
 }
 
-.skill-card:hover .skill-icon {
-  filter: drop-shadow(0 0 8px rgba(176, 111, 216, 0.8));
+.skill-card:hover .icon {
+  color: var(--color-neon-violet);
 }
 
-.skill-card .skill-name {
+.skill-card .name {
   font-weight: 700;
+  font-size: 14px;
   color: var(--color-text-primary);
-  font-size: 0.9rem;
 }
 
 /* 프로젝트 카드 */
@@ -80,8 +85,7 @@
   background: var(--color-bg-card);
   border-radius: var(--radius-md);
   overflow: hidden;
-  border: 1px solid var(--color-border);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 
 .project-card:hover {
@@ -89,20 +93,14 @@
   box-shadow: var(--shadow-glow-purple);
 }
 
-.project-card-thumb {
-  aspect-ratio: 16 / 9;
-  background: var(--color-bg-card);
+.project-card .thumb {
   position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--color-bg-secondary);
   overflow: hidden;
 }
 
-.project-card-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.project-card-thumb .overlay {
+.project-card .thumb .overlay {
   position: absolute;
   inset: 0;
   background: rgba(26, 10, 46, 0.85);
@@ -110,100 +108,123 @@
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s;
 }
 
-.project-card:hover .overlay {
+.project-card:hover .thumb .overlay {
   opacity: 1;
 }
 
-.project-card-body {
+.project-card .body {
   padding: var(--space-lg);
 }
 
-.project-card-title {
-  font-weight: 800;
-  font-size: 1.1rem;
+.project-card .title {
+  font-size: 18px;
+  font-weight: 700;
   margin-bottom: var(--space-sm);
+  color: var(--color-text-primary);
 }
 
-.project-card-desc {
+.project-card .desc {
+  font-size: 14px;
   color: var(--color-text-secondary);
-  font-size: 0.9rem;
   margin-bottom: var(--space-md);
+  line-height: 1.6;
 }
 
-.project-links {
-  display: flex;
-  gap: var(--space-sm);
-  flex-wrap: wrap;
-}
-
-.project-tags {
+.project-card .tags {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-xs);
   margin-bottom: var(--space-md);
 }
 
-.tag {
-  padding: var(--space-xs) var(--space-sm);
+.project-card .tag {
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
   border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-family: var(--font-code);
-  background: rgba(176, 111, 216, 0.2);
-  color: var(--color-neon-violet);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+}
+
+.project-card .links {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.project-card .links a,
+.project-card .links button {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.project-card .links .btn-demo {
+  background: var(--color-primary);
+  color: white;
+}
+
+.project-card .links .btn-github {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
 }
 
 /* 통계 카드 */
 .stat-card {
   text-align: center;
-  padding: var(--space-xl);
+  padding: var(--space-lg);
   color: var(--color-text-primary);
 }
 
-.stat-card .stat-icon {
-  font-size: 2rem;
+.stat-card .icon {
+  font-size: 28px;
   margin-bottom: var(--space-sm);
-}
-
-.stat-card .stat-value {
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
-  font-weight: 800;
-  margin-bottom: var(--space-xs);
-}
-
-.stat-card .stat-label {
-  font-size: 0.9rem;
   opacity: 0.9;
+}
+
+.stat-card .number {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 800;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-card .label {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
 }
 
 /* 폼 */
 .form-group {
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 .form-group label {
   display: block;
-  margin-bottom: var(--space-sm);
+  font-size: 14px;
   font-weight: 500;
   color: var(--color-text-secondary);
+  margin-bottom: 6px;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: var(--space-md);
-  background: rgba(255, 255, 255, 0.06);
+  padding: 14px 16px;
+  background: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   color: var(--color-text-primary);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: var(--color-text-muted);
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-group input:focus,
@@ -218,27 +239,145 @@
   resize: vertical;
 }
 
+.btn-submit {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--color-primary-gradient-start), var(--color-primary-gradient-end));
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: var(--radius-md);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-submit:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-glow-purple);
+}
+
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* 토스트 */
 .toast {
   position: fixed;
   bottom: var(--space-xl);
   right: var(--space-xl);
-  padding: var(--space-md) var(--space-lg);
+  padding: 14px 24px;
   background: var(--color-bg-card);
   border: 1px solid var(--color-neon-violet);
   border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-weight: 500;
   box-shadow: var(--shadow-glow-purple);
   z-index: 9999;
-  animation: toast-in 0.3s ease;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s, transform 0.3s;
 }
 
-@keyframes toast-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* TOP 버튼 */
+.btn-top {
+  position: fixed;
+  bottom: var(--space-xl);
+  right: var(--space-xl);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: var(--shadow-glow-purple);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+}
+
+.btn-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.btn-top:hover {
+  transform: scale(1.08);
+}
+
+/* 프로젝트 상세 모달 */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-overlay .modal-box {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  max-width: 560px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-glow-purple);
+}
+
+.modal-overlay .modal-close {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-primary);
+  font-size: 24px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.modal-overlay .modal-close:hover {
+  background: var(--color-bg-card);
+}
+
+.modal-overlay .modal-header {
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modal-overlay .modal-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.modal-overlay .modal-body {
+  padding: var(--space-lg);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
 }

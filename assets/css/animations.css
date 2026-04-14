@@ -1,147 +1,77 @@
-/* animations.css — 페이드인, 스태거 등 */
-.fade-in {
-  animation: fadeIn 0.6s ease forwards;
-}
-
+/* ===== 애니메이션 ===== */
 .fade-up {
   opacity: 0;
   transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 .fade-up.visible {
-  animation: fadeUpIn 0.6s ease forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeUpIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 스태거 딜레이 유틸 */
-.stagger-1 { animation-delay: 0.05s; }
-.stagger-2 { animation-delay: 0.1s; }
-.stagger-3 { animation-delay: 0.15s; }
-.stagger-4 { animation-delay: 0.2s; }
-.stagger-5 { animation-delay: 0.25s; }
-.stagger-6 { animation-delay: 0.3s; }
-.stagger-7 { animation-delay: 0.35s; }
-.stagger-8 { animation-delay: 0.4s; }
-.stagger-9 { animation-delay: 0.45s; }
-.stagger-10 { animation-delay: 0.5s; }
-
-/* 모달 */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 2000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-lg);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.modal-backdrop.open {
   opacity: 1;
-  visibility: visible;
+  transform: translateY(0);
 }
 
-.modal-content {
-  background: var(--color-bg-secondary);
-  border-radius: var(--radius-lg);
-  max-width: 600px;
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-glow-purple);
-  transform: scale(0.9);
-  transition: transform 0.3s ease;
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-.modal-backdrop.open .modal-content {
-  transform: scale(1);
+.fade-in.visible {
+  opacity: 1;
 }
 
-.modal-header {
-  padding: var(--space-xl);
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* 스크롤 유도 바운스 */
+@keyframes bounce-scroll {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
 }
 
-.modal-close {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  color: var(--color-text-muted);
-  transition: background 0.2s ease, color 0.2s ease;
+.bounce-scroll {
+  animation: bounce-scroll 2s ease-in-out infinite;
 }
 
-.modal-close:hover {
-  background: var(--color-bg-card);
-  color: var(--color-text-primary);
+/* 커서 깜빡임 */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
-.modal-body {
-  padding: var(--space-xl);
+.cursor-blink::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: var(--color-neon-green);
+  margin-left: 2px;
 }
 
-.modal-body .project-card-thumb {
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-lg);
+/* 헤더 */
+.header-hidden {
+  transform: translateY(-100%);
 }
 
-.modal-body .project-tags {
-  margin-bottom: var(--space-md);
+.header-transition {
+  transition: transform 0.3s ease, background 0.3s ease, backdrop-filter 0.3s ease;
 }
 
-/* 로딩 스피너 (폼 제출) */
-.btn-submit.loading {
-  pointer-events: none;
+/* 네비 언더라인 */
+.nav-link {
   position: relative;
-  color: transparent;
 }
 
-.btn-submit.loading::after {
+.nav-link::after {
   content: '';
   position: absolute;
-  width: 24px;
-  height: 24px;
-  border: 2px solid transparent;
-  border-top-color: currentColor;
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  margin: -12px 0 0 -12px;
-  animation: spin 0.8s linear infinite;
-  color: var(--color-text-primary);
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-neon-violet);
+  transition: width 0.25s ease;
 }
 
-.btn-submit.done {
-  background: var(--color-neon-green);
-  color: var(--color-bg-primary);
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.nav-link.active {
+  color: var(--color-neon-violet);
 }
