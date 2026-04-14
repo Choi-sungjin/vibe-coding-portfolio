@@ -64,21 +64,42 @@
           <a href="https://github.com" class="btn-outline" target="_blank" rel="noopener noreferrer">GitHub 방문</a>
         </div>
       </div>
-      <div class="code-editor-card">
-        <div class="title-bar">
-          <span class="dot red"></span>
-          <span class="dot yellow"></span>
-          <span class="dot green"></span>
-          <span class="filename">📄 about.js</span>
+      <div class="hero-experiment-card">
+        <div class="card-topline">
+          <p class="card-label">HAND TRACKING DEMO</p>
+          <span class="card-status">LIVE CONCEPT</span>
         </div>
-        <div class="code-body cursor-blink">
-          <div class="line"><span class="key">const</span> developer = {</div>
-          <div class="line">  name: <span class="string">"최성진"</span>,</div>
-          <div class="line">  role: <span class="string">"Web & PLC Automation Engineer"</span>,</div>
-          <div class="line">  stack: [<span class="string">"JavaScript"</span>, <span class="string">"React"</span>, <span class="string">"PLC"</span>, <span class="string">"Modbus"</span>, ...],</div>
-          <div class="line">  coffee: <span class="bool">true</span>, ☕</div>
-          <div class="line">  openToWork: <span class="bool">true</span> ✅</div>
-          <div class="line">}</div>
+        <h2 class="card-title">노트북 웹캠으로 본 왼손을 5지 로봇손으로 실시간 동기화</h2>
+        <p class="card-desc">
+          노트북 웹캠 기준 데모 콘셉트입니다.
+          왼손 랜드마크를 읽고 5지 로봇손이 같은 포즈를 따라갑니다.
+        </p>
+        <div class="handtracking-showcase">
+          <figure class="showcase-media">
+            <div class="showcase-overlay">
+              <span>LAPTOP WEBCAM INPUT</span>
+              <span>ROBOT HAND OUTPUT</span>
+            </div>
+            <img src="assets/images/projects/robot-hand-sync.png" alt="다섯 손가락 로봇손 핸드트래킹 콘셉트 이미지">
+            <figcaption>왼손을 카메라에 보여주세요</figcaption>
+          </figure>
+          <div class="showcase-specs">
+            <article class="spec-card">
+              <span class="spec-label">Input Device</span>
+              <strong>Laptop Webcam</strong>
+              <p>왼손 포즈와 손가락 관절 포인트를 실시간 인식</p>
+            </article>
+            <article class="spec-card">
+              <span class="spec-label">Mapping</span>
+              <strong>21-point Landmark</strong>
+              <p>손가락 관절 데이터와 랜드마크를 1:1로 매핑</p>
+            </article>
+            <article class="spec-card">
+              <span class="spec-label">Output</span>
+              <strong>Five-finger Robot Hand</strong>
+              <p>엄지부터 소지까지 같은 포즈를 실시간 추종</p>
+            </article>
+          </div>
         </div>
       </div>
     </div>
@@ -173,76 +194,72 @@
     <div class="container">
       <div class="section-head">
         <h2 class="section-title">Tech Stack</h2>
-        <p class="section-desc">현장 자동화에서 강한 핵심 역량과 현재 확장 중인 웹·AI 도구를 구분해 정리했습니다</p>
+        <p class="section-desc">검증된 현장 역량과 지금 확장 중인 개발 역량을 같은 무게로 섞지 않고 분리해 정리했습니다</p>
       </div>
-      <div class="skill-groups grid-2" id="skillGroups">
-        <article class="skill-group fade-up">
-          <div class="skill-group-head">
-            <span class="skill-group-icon">🏭</span>
-            <div>
-              <h3 class="skill-group-title">Automation</h3>
-              <p class="skill-group-desc">가장 오래 다뤄온 핵심 실무 역량</p>
-            </div>
+      <div class="skills-intro-strip fade-up">
+        <span class="skills-intro-label">AUTOMATION FIRST</span>
+        <p class="skills-intro-text">PLC와 생산기술은 이미 검증된 실무축으로, 웹과 AI 도구는 현재 만들어가며 넓히는 축으로 보여주고 있습니다.</p>
+      </div>
+      <div class="skills-ledger" id="skillGroups">
+        <article class="skill-track fade-up skill-track-automation">
+          <div class="skill-track-meta">
+            <span class="skill-track-code">CORE 01</span>
+            <h3 class="skill-track-title">Automation</h3>
+            <p class="skill-track-desc">18년 이상 현장에서 직접 다뤄온 핵심 실무 역량</p>
           </div>
-          <div class="skill-chip-list">
-            <span class="skill-chip">LS PLC</span>
-            <span class="skill-chip">Mitsubishi PLC</span>
-            <span class="skill-chip">PLC Programming</span>
-            <span class="skill-chip">Sequence Control</span>
-            <span class="skill-chip">Modbus Communication</span>
-            <span class="skill-chip">Vision Inspection</span>
-            <span class="skill-chip">Equipment Troubleshooting</span>
-            <span class="skill-chip">Production Engineering</span>
-          </div>
-        </article>
-        <article class="skill-group fade-up">
-          <div class="skill-group-head">
-            <span class="skill-group-icon">💻</span>
-            <div>
-              <h3 class="skill-group-title">Web</h3>
-              <p class="skill-group-desc">지금 직접 만들면서 확장 중인 영역</p>
-            </div>
-          </div>
-          <div class="skill-chip-list">
-            <span class="skill-chip">HTML/CSS</span>
-            <span class="skill-chip">JavaScript</span>
-            <span class="skill-chip">React</span>
-            <span class="skill-chip">Python</span>
-            <span class="skill-chip">REST API</span>
-            <span class="skill-chip">AI-assisted Development</span>
+          <div class="skill-track-items">
+            <span class="skill-token">LS PLC</span>
+            <span class="skill-token">Mitsubishi PLC</span>
+            <span class="skill-token">PLC Programming</span>
+            <span class="skill-token">Sequence Control</span>
+            <span class="skill-token">Modbus Communication</span>
+            <span class="skill-token">Vision Inspection</span>
+            <span class="skill-token">Equipment Troubleshooting</span>
+            <span class="skill-token">Production Engineering</span>
           </div>
         </article>
-        <article class="skill-group fade-up">
-          <div class="skill-group-head">
-            <span class="skill-group-icon">🌱</span>
-            <div>
-              <h3 class="skill-group-title">Learning</h3>
-              <p class="skill-group-desc">조금씩 익히고 있는 스택과 관심 분야</p>
-            </div>
+        <article class="skill-track fade-up skill-track-web">
+          <div class="skill-track-meta">
+            <span class="skill-track-code">BUILD 02</span>
+            <h3 class="skill-track-title">Web</h3>
+            <p class="skill-track-desc">지금 직접 만들고 부딪히며 넓히는 개발 영역</p>
           </div>
-          <div class="skill-chip-list">
-            <span class="skill-chip">MongoDB</span>
-            <span class="skill-chip">Docker</span>
-            <span class="skill-chip">Vercel</span>
-            <span class="skill-chip">GitHub Actions</span>
-            <span class="skill-chip">Physical AI</span>
-            <span class="skill-chip">Workflow Automation</span>
+          <div class="skill-track-items">
+            <span class="skill-token">HTML/CSS</span>
+            <span class="skill-token">JavaScript</span>
+            <span class="skill-token">React</span>
+            <span class="skill-token">Python</span>
+            <span class="skill-token">REST API</span>
+            <span class="skill-token">AI-assisted Development</span>
           </div>
         </article>
-        <article class="skill-group fade-up">
-          <div class="skill-group-head">
-            <span class="skill-group-icon">🧰</span>
-            <div>
-              <h3 class="skill-group-title">Tools</h3>
-              <p class="skill-group-desc">실제로 작업 흐름에서 사용하는 도구</p>
-            </div>
+        <article class="skill-track fade-up skill-track-learning">
+          <div class="skill-track-meta">
+            <span class="skill-track-code">LEARN 03</span>
+            <h3 class="skill-track-title">Learning</h3>
+            <p class="skill-track-desc">조금씩 익히고 있는 스택과 다음 단계 관심 분야</p>
           </div>
-          <div class="skill-chip-list">
-            <span class="skill-chip">GitHub</span>
-            <span class="skill-chip">Cursor</span>
-            <span class="skill-chip">Antigravity</span>
-            <span class="skill-chip">AppSheet</span>
-            <span class="skill-chip">Google Sheets</span>
+          <div class="skill-track-items">
+            <span class="skill-token">MongoDB</span>
+            <span class="skill-token">Docker</span>
+            <span class="skill-token">Vercel</span>
+            <span class="skill-token">GitHub Actions</span>
+            <span class="skill-token">Physical AI</span>
+            <span class="skill-token">Workflow Automation</span>
+          </div>
+        </article>
+        <article class="skill-track fade-up skill-track-tools">
+          <div class="skill-track-meta">
+            <span class="skill-track-code">FLOW 04</span>
+            <h3 class="skill-track-title">Tools</h3>
+            <p class="skill-track-desc">실제로 작업 흐름에 붙여 쓰고 있는 도구</p>
+          </div>
+          <div class="skill-track-items">
+            <span class="skill-token">GitHub</span>
+            <span class="skill-token">Cursor</span>
+            <span class="skill-token">Antigravity</span>
+            <span class="skill-token">AppSheet</span>
+            <span class="skill-token">Google Sheets</span>
           </div>
         </article>
       </div>

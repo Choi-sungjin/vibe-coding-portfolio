@@ -10,8 +10,14 @@
     justify-content: center;
   }
 
-  .code-editor-card {
-    order: -1;
+  .hero-experiment-card .card-topline,
+  .hero-experiment-card .showcase-overlay {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-experiment-card .card-status {
+    align-self: flex-start;
   }
 
   .grid-stats .stat-card .number {
