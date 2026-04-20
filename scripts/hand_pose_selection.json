@@ -1,0 +1,52 @@
+{
+  "pose-open.png": {
+    "clip": "clip-20",
+    "sample": 3,
+    "note": "Fully open hand from the square clips."
+  },
+  "pose-relaxed-open.png": {
+    "clip": "clip-20",
+    "sample": 4,
+    "note": "Softer open-hand posture before the curl starts."
+  },
+  "pose-thumb-open.png": {
+    "clip": "clip-20",
+    "sample": 6,
+    "note": "Thumb stays wide while the inner fingers start folding."
+  },
+  "pose-claw.png": {
+    "clip": "clip-20",
+    "sample": 8,
+    "note": "Curved claw-like grip."
+  },
+  "pose-fist.png": {
+    "clip": "clip-21",
+    "sample": 9,
+    "note": "Most stable closed-fist landing frame."
+  },
+  "pose-hook.png": {
+    "clip": "clip-26",
+    "sample": 8,
+    "note": "Tighter hooked grip before the full close."
+  },
+  "pose-split.png": {
+    "clip": "clip-22",
+    "sample": 9,
+    "note": "Two-finger split posture."
+  },
+  "pose-precision.png": {
+    "clip": "clip-23",
+    "sample": 9,
+    "note": "Precision ring / OK-style contact."
+  },
+  "pose-ring-fold.png": {
+    "clip": "clip-24",
+    "sample": 9,
+    "note": "Single folded finger reference."
+  },
+  "pose-tripod.png": {
+    "clip": "clip-25",
+    "sample": 7,
+    "note": "Tripod-like pinch landing frame."
+  }
+}

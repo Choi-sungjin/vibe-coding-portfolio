@@ -447,6 +447,8 @@
     var overlayCanvas = document.getElementById('handTrackingOverlay');
     var robotCanvas = document.getElementById('robotMappingCanvas');
     var robotStage = document.getElementById('robotStage');
+    var robotBackdrop = document.getElementById('robotStageBackdrop');
+    var robotMotion = document.getElementById('robotStageMotion');
     var placeholder = document.getElementById('cameraPreviewPlaceholder');
     var requestBtn = document.getElementById('cameraRequestBtn');
     var disconnectBtn = document.getElementById('cameraDisconnectBtn');
@@ -458,6 +460,7 @@
     var gestureMetric = document.getElementById('gestureMetric');
     var depthMetric = document.getElementById('depthMetric');
     var robotImage = robotStage ? robotStage.querySelector('.robot-hand-visual') : null;
+    var poseReferenceCards = Array.prototype.slice.call(document.querySelectorAll('.pose-reference-card'));
     var fingerMetrics = {
       thumb: {
         value: document.getElementById('thumbMetricValue'),
@@ -483,6 +486,7 @@
 
     if (
       !shell || !video || !overlayCanvas || !robotCanvas || !robotStage ||
+      !robotBackdrop || !robotMotion ||
       !placeholder || !requestBtn || !disconnectBtn || !status ||
       !trackingChip || !robotTrackingState || !trackingMetric ||
       !handednessMetric || !gestureMetric || !depthMetric || !robotImage ||
@@ -539,6 +543,11 @@
       if (!pose || state.currentRobotPoseKey === pose.key) return;
       state.currentRobotPoseKey = pose.key;
       robotImage.src = pose.src;
+      robotBackdrop.setAttribute('data-pose', pose.key);
+      robotStage.style.setProperty('--robot-stage-image', 'url("' + pose.src + '")');
+      poseReferenceCards.forEach(function (card) {
+        card.classList.toggle('is-active', card.getAttribute('data-pose-key') === pose.key);
+      });
     }
 
     function hidePlaceholder() {
@@ -551,8 +560,8 @@
 
     function resetRobotTransform() {
       state.smoothedRotation = { x: 0, y: 0, z: 0 };
-      robotStage.style.transform = 'perspective(1400px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)';
-      robotImage.style.transform = 'translateZ(0px) scale(1)';
+      robotMotion.style.transform = 'perspective(1400px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)';
+      robotImage.style.transform = 'translate3d(0px, 0px, 16px) scale(1)';
     }
 
     function applyRobotTransform(targetRotation, hasHand, worldLandmarks, landmarks) {
@@ -571,7 +580,7 @@
         offsetY = clamp((landmarks[9].y - 0.5) * 18, -10, 10);
       }
 
-      robotStage.style.transform =
+      robotMotion.style.transform =
         'perspective(1400px) rotateX(' + state.smoothedRotation.x.toFixed(2) + 'deg) ' +
         'rotateY(' + state.smoothedRotation.y.toFixed(2) + 'deg) ' +
         'rotateZ(' + state.smoothedRotation.z.toFixed(2) + 'deg)';

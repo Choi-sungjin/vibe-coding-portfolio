@@ -1,0 +1,64 @@
+{
+  "copied": [
+    {
+      "target": "assets/images/projects/robot-hand-poses/pose-open.png",
+      "clip": "clip-20",
+      "sample": 3,
+      "note": "Fully open hand from the square clips."
+    },
+    {
+      "target": "assets/images/projects/robot-hand-poses/pose-relaxed-open.png",
+      "clip": "clip-20",
+      "sample": 4,
+      "note": "Softer open-hand posture before the curl starts."
+    },
+    {
+      "target": "assets/images/projects/robot-hand-poses/pose-thumb-open.png",
+      "clip": "clip-20",
+      "sample": 6,
+      "note": "Thumb stays wide while the inner fingers start folding."
+    },
+    {
+      "target": "assets/images/projects/robot-hand-poses/pose-claw.png",
+      "clip": "clip-20",
+      "sample": 8,
+      "note": "Curved claw-like grip."
+    },
+    {
+      "target": "assets/images/projects/robot-hand-poses/pose-fist.png",
+      "clip": "clip-21",
+      "sample": 9,
+      "note": "Most stable closed-fist landing frame."
+    },
+    {
+      "target": "assets/images/projects/robot-hand-poses/pose-hook.png",
+      "clip": "clip-26",
+      "sample": 8,
+      "note": "Tighter hooked grip before the full close."
+    },
+    {
+      "target": "assets/images/projects/robot-hand-poses/pose-split.png",
+      "clip": "clip-22",
+      "sample": 9,
+      "note": "Two-finger split posture."
+    },
+    {
+      "target": "assets/images/projects/robot-hand-poses/pose-precision.png",
+      "clip": "clip-23",
+      "sample": 9,
+      "note": "Precision ring / OK-style contact."
+    },
+    {
+      "target": "assets/images/projects/robot-hand-poses/pose-ring-fold.png",
+      "clip": "clip-24",
+      "sample": 9,
+      "note": "Single folded finger reference."
+    },
+    {
+      "target": "assets/images/projects/robot-hand-poses/pose-tripod.png",
+      "clip": "clip-25",
+      "sample": 7,
+      "note": "Tripod-like pinch landing frame."
+    }
+  ]
+}

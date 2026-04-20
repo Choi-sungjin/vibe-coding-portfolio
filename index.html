@@ -110,9 +110,12 @@
               <span class="tracking-chip tracking-chip-output" id="robotTrackingState">IDLE</span>
             </div>
             <div class="robot-stage" id="robotStage">
-              <img class="robot-hand-visual" src="assets/images/projects/robot-hand-poses/pose-open.png" alt="다섯 손가락 로봇손 핸드트래킹 이미지">
-              <canvas class="robot-mapping-canvas" id="robotMappingCanvas"></canvas>
-              <div class="robot-stage-glow" aria-hidden="true"></div>
+              <div class="robot-stage-backdrop" id="robotStageBackdrop" aria-hidden="true"></div>
+              <div class="robot-stage-motion" id="robotStageMotion">
+                <img class="robot-hand-visual" src="assets/images/projects/robot-hand-poses/pose-open.png" alt="다섯 손가락 로봇손 핸드트래킹 이미지">
+                <canvas class="robot-mapping-canvas" id="robotMappingCanvas"></canvas>
+                <div class="robot-stage-glow" aria-hidden="true"></div>
+              </div>
             </div>
             <div class="tracking-stats">
               <article class="tracking-stat">
@@ -169,6 +172,51 @@
                 <div class="finger-metric-track"><span id="pinkyMetricBar"></span></div>
               </article>
             </div>
+            <div class="pose-reference-rail" id="poseReferenceRail" aria-label="손동작 캡처 기준 프레임">
+              <article class="pose-reference-card" data-pose-key="open">
+                <img src="assets/images/projects/robot-hand-poses/pose-open.png" alt="펼친 손 캡처 프레임">
+                <div class="pose-reference-copy">
+                  <span>Open</span>
+                  <strong>펼친 손</strong>
+                </div>
+              </article>
+              <article class="pose-reference-card" data-pose-key="relaxed-open">
+                <img src="assets/images/projects/robot-hand-poses/pose-relaxed-open.png" alt="완만하게 펼친 손 캡처 프레임">
+                <div class="pose-reference-copy">
+                  <span>Relaxed</span>
+                  <strong>완만한 오픈</strong>
+                </div>
+              </article>
+              <article class="pose-reference-card" data-pose-key="split">
+                <img src="assets/images/projects/robot-hand-poses/pose-split.png" alt="두 손가락 분리 자세 캡처 프레임">
+                <div class="pose-reference-copy">
+                  <span>Split</span>
+                  <strong>두 손가락 분리</strong>
+                </div>
+              </article>
+              <article class="pose-reference-card" data-pose-key="precision">
+                <img src="assets/images/projects/robot-hand-poses/pose-precision.png" alt="정밀 집기 자세 캡처 프레임">
+                <div class="pose-reference-copy">
+                  <span>Precision</span>
+                  <strong>정밀 집기</strong>
+                </div>
+              </article>
+              <article class="pose-reference-card" data-pose-key="ring-fold">
+                <img src="assets/images/projects/robot-hand-poses/pose-ring-fold.png" alt="단일 손가락 접힘 캡처 프레임">
+                <div class="pose-reference-copy">
+                  <span>Fold</span>
+                  <strong>단일 손가락 접힘</strong>
+                </div>
+              </article>
+              <article class="pose-reference-card" data-pose-key="fist">
+                <img src="assets/images/projects/robot-hand-poses/pose-fist.png" alt="주먹 자세 캡처 프레임">
+                <div class="pose-reference-copy">
+                  <span>Fist</span>
+                  <strong>닫힌 그립</strong>
+                </div>
+              </article>
+            </div>
+            <p class="pose-reference-note">손동작 소스 영상을 프레임별로 검토해 골라낸 기준 캡처입니다.</p>
           </section>
         </div>
         <div class="showcase-specs">
