@@ -11,8 +11,9 @@
   var VISION_BUNDLE_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.mjs';
   var WASM_ROOT_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm';
   var MODEL_ASSET_URL = 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
-  var POSE_SWITCH_MARGIN = 120;
+  var POSE_SWITCH_MARGIN = 72;
   var POSE_SWITCH_CONFIRM_FRAMES = 2;
+  var SPECIAL_POSE_CONFIRM_FRAMES = 1;
 
   var HAND_CONNECTIONS = [
     [0, 1], [1, 2], [2, 3], [3, 4],
@@ -248,6 +249,33 @@
     return 'Tracking';
   }
 
+  function buildFingerValueMap(fingerMetrics) {
+    var map = {};
+    fingerMetrics.forEach(function (metric) {
+      map[metric.key] = metric.intensity;
+    });
+    return map;
+  }
+
+  function computePoseSignals(landmarks, fingerMetrics) {
+    var palmSize = Math.max(distance(landmarks[0], landmarks[9]), 0.001);
+    var values = buildFingerValueMap(fingerMetrics);
+
+    return {
+      thumb: values.thumb || 0,
+      index: values.index || 0,
+      middle: values.middle || 0,
+      ring: values.ring || 0,
+      pinky: values.pinky || 0,
+      pinchIndex: distance(landmarks[4], landmarks[8]) / palmSize,
+      pinchMiddle: distance(landmarks[4], landmarks[12]) / palmSize,
+      pinchRing: distance(landmarks[4], landmarks[16]) / palmSize,
+      spreadIndexMiddle: distance(landmarks[8], landmarks[12]) / palmSize,
+      spreadMiddleRing: distance(landmarks[12], landmarks[16]) / palmSize,
+      spreadRingPinky: distance(landmarks[16], landmarks[20]) / palmSize
+    };
+  }
+
   function getDepthText(worldLandmarks) {
     if (!worldLandmarks || !worldLandmarks.length || typeof worldLandmarks[9].z !== 'number') {
       return '0.0 cm';
@@ -384,8 +412,16 @@
     var palmSize = Math.max(distance(landmarks[0], landmarks[9]), 0.001);
 
     return FINGER_CONFIGS.map(function (config) {
-      var tipReach = distance(landmarks[config.tip], landmarks[0]) / palmSize;
-      var extension = clamp((tipReach - 0.85) / 1.05, 0, 1);
+      var mcp = landmarks[config.chain[0]];
+      var pip = landmarks[config.chain[1]];
+      var dip = landmarks[config.chain[2]];
+      var tip = landmarks[config.chain[3]];
+      var chainLength = Math.max(distance(mcp, pip) + distance(pip, dip) + distance(dip, tip), 0.001);
+      var directReach = distance(mcp, tip) / chainLength;
+      var wristReach = distance(tip, landmarks[0]) / palmSize;
+      var straightness = clamp((directReach - 0.5) / 0.34, 0, 1);
+      var span = clamp((wristReach - 0.72) / 1.02, 0, 1);
+      var extension = clamp(straightness * 0.68 + span * 0.32, 0, 1);
 
       return {
         key: config.key,
@@ -436,6 +472,50 @@
       pose: bestPose,
       score: bestScore
     };
+  }
+
+  function getExplicitPoseOverride(signals) {
+    if (
+      signals.pinchIndex < 0.34 &&
+      signals.middle > 0.68 &&
+      signals.pinky > 0.52 &&
+      signals.thumb > 0.62
+    ) {
+      return findPoseByKey('precision');
+    }
+
+    if (
+      signals.index > 0.72 &&
+      signals.middle > 0.72 &&
+      signals.ring < 0.46 &&
+      signals.pinky > 0.72 &&
+      signals.thumb > 0.58
+    ) {
+      return findPoseByKey('ring-fold');
+    }
+
+    if (
+      signals.index > 0.72 &&
+      signals.middle > 0.72 &&
+      signals.ring < 0.44 &&
+      signals.pinky > 0.34 &&
+      signals.pinky < 0.7 &&
+      signals.thumb > 0.56
+    ) {
+      return findPoseByKey('split');
+    }
+
+    if (
+      signals.pinchIndex < 0.42 &&
+      signals.middle > 0.58 &&
+      signals.ring < 0.58 &&
+      signals.pinky < 0.58 &&
+      signals.thumb > 0.56
+    ) {
+      return findPoseByKey('tripod');
+    }
+
+    return null;
   }
 
   function computeRobotPoints(landmarks, width, height) {
@@ -502,7 +582,6 @@
     var depthMetric = document.getElementById('depthMetric');
     var robotBaseImage = robotStage ? robotStage.querySelector('.robot-hand-visual-base') : null;
     var robotBlendImage = document.getElementById('robotHandBlendVisual');
-    var poseReferenceCards = Array.prototype.slice.call(document.querySelectorAll('.pose-reference-card'));
     var fingerMetrics = {
       thumb: {
         value: document.getElementById('thumbMetricValue'),
@@ -622,9 +701,6 @@
       state.currentRobotPoseKey = pose.key;
       robotBackdrop.setAttribute('data-pose', pose.key);
       robotStage.style.setProperty('--robot-stage-image', 'url("' + pose.src + '")');
-      poseReferenceCards.forEach(function (card) {
-        card.classList.toggle('is-active', card.getAttribute('data-pose-key') === pose.key);
-      });
     }
 
     function hidePlaceholder() {
@@ -670,38 +746,41 @@
       robotBlendImage.style.transform = transformValue;
     }
 
-    function selectStableRobotPose(values) {
+    function selectStableRobotPose(values, signals) {
       var bestMatch = pickRobotPose(values);
+      var explicitPose = getExplicitPoseOverride(signals);
       var currentPose = findPoseByKey(state.currentRobotPoseKey);
+      var targetPose = explicitPose || bestMatch.pose;
+      var requiredFrames = explicitPose ? SPECIAL_POSE_CONFIRM_FRAMES : POSE_SWITCH_CONFIRM_FRAMES;
 
       if (!currentPose) {
         resetPendingRobotPose();
-        return bestMatch.pose;
+        return targetPose;
       }
 
-      if (currentPose.key === bestMatch.pose.key) {
+      if (currentPose.key === targetPose.key) {
         resetPendingRobotPose();
         return currentPose;
       }
 
-      if (scoreRobotPose(currentPose, values) <= bestMatch.score + POSE_SWITCH_MARGIN) {
+      if (!explicitPose && scoreRobotPose(currentPose, values) <= bestMatch.score + POSE_SWITCH_MARGIN) {
         resetPendingRobotPose();
         return currentPose;
       }
 
-      if (state.pendingRobotPoseKey !== bestMatch.pose.key) {
-        state.pendingRobotPoseKey = bestMatch.pose.key;
+      if (state.pendingRobotPoseKey !== targetPose.key) {
+        state.pendingRobotPoseKey = targetPose.key;
         state.pendingRobotPoseFrames = 1;
         return currentPose;
       }
 
       state.pendingRobotPoseFrames += 1;
-      if (state.pendingRobotPoseFrames < POSE_SWITCH_CONFIRM_FRAMES) {
+      if (state.pendingRobotPoseFrames < requiredFrames) {
         return currentPose;
       }
 
       resetPendingRobotPose();
-      return bestMatch.pose;
+      return targetPose;
     }
 
     function stopStream() {
@@ -838,14 +917,14 @@
       var robotPoints = smoothPoints(state.smoothedRobotPoints, rawRobotPoints, 0.34);
       var robotRotation = computeRobotRotation(landmarks, worldLandmarks);
       var handedness = getHandednessLabel(results);
-      var gesturePose = getPoseLabel(landmarks);
       var fingerData = computeFingerMetrics(landmarks);
+      var poseSignals = computePoseSignals(landmarks, fingerData);
       var smoothedFingerValues = smoothValues(
         state.smoothedFingerValues,
         fingerData.map(function (item) { return item.value; }),
-        0.28
+        0.38
       );
-      var selectedRobotPose = selectStableRobotPose(smoothedFingerValues);
+      var selectedRobotPose = selectStableRobotPose(smoothedFingerValues, poseSignals);
 
       state.smoothedRobotPoints = robotPoints;
       state.smoothedFingerValues = smoothedFingerValues;
