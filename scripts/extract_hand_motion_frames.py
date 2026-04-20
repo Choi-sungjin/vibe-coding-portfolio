@@ -23,7 +23,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--source", required=True, help="Directory containing source mp4 files.")
     parser.add_argument("--output", required=True, help="Directory to write extracted review assets.")
-    parser.add_argument("--samples", type=int, default=9, help="Number of evenly spaced samples per clip.")
+    parser.add_argument("--samples", type=int, default=13, help="Number of evenly spaced samples per clip.")
     parser.add_argument(
         "--trim-start",
         type=float,

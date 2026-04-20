@@ -433,8 +433,22 @@
   object-fit: cover;
   transform-origin: 50% 58%;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
-  transition: transform 0.14s linear, filter 0.18s ease, opacity 0.18s ease;
+  transition: transform 0.14s linear, filter 0.18s ease, opacity 0.28s ease;
   filter: saturate(1.05) contrast(1.06);
+}
+
+.hero-experiment-card .robot-hand-visual-base {
+  z-index: 1;
+}
+
+.hero-experiment-card .robot-hand-visual-blend {
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-experiment-card .robot-hand-visual-blend.is-visible {
+  opacity: 1;
 }
 
 .hero-experiment-card .camera-preview-video {
@@ -462,6 +476,10 @@
 .hero-experiment-card .robot-stage-glow,
 .hero-experiment-card .camera-stage-mask {
   pointer-events: none;
+}
+
+.hero-experiment-card .robot-mapping-canvas {
+  z-index: 3;
 }
 
 .hero-experiment-card .camera-stage-mask {
@@ -605,6 +623,7 @@
 }
 
 .hero-experiment-card .robot-stage-glow {
+  z-index: 4;
   background:
     radial-gradient(circle at 50% 72%, rgba(0, 212, 255, 0.12), transparent 34%),
     radial-gradient(circle at 50% 50%, rgba(176, 111, 216, 0.09), transparent 56%);

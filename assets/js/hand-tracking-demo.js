@@ -11,6 +11,8 @@
   var VISION_BUNDLE_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.mjs';
   var WASM_ROOT_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm';
   var MODEL_ASSET_URL = 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
+  var POSE_SWITCH_MARGIN = 120;
+  var POSE_SWITCH_CONFIRM_FRAMES = 2;
 
   var HAND_CONNECTIONS = [
     [0, 1], [1, 2], [2, 3], [3, 4],
@@ -31,40 +33,64 @@
 
   var ROBOT_POSE_LIBRARY = [
     {
-      key: 'fist',
-      label: 'Fist',
-      src: 'assets/images/projects/robot-hand-poses/pose-fist.png',
-      targets: [10, 10, 10, 10, 10]
+      key: 'open',
+      label: 'Open Hand',
+      src: 'assets/images/projects/robot-hand-poses/pose-open.png',
+      targets: [94, 100, 100, 100, 100]
     },
     {
-      key: 'hook',
-      label: 'Hook',
-      src: 'assets/images/projects/robot-hand-poses/pose-hook.png',
-      targets: [55, 18, 16, 18, 16]
-    },
-    {
-      key: 'claw',
-      label: 'Claw',
-      src: 'assets/images/projects/robot-hand-poses/pose-claw.png',
-      targets: [72, 42, 36, 36, 32]
-    },
-    {
-      key: 'thumb-open',
-      label: 'Thumb Open',
-      src: 'assets/images/projects/robot-hand-poses/pose-thumb-open.png',
-      targets: [95, 74, 76, 72, 68]
+      key: 'open-soft',
+      label: 'Open Soft',
+      src: 'assets/images/projects/robot-hand-poses/pose-open-soft.png',
+      targets: [94, 97, 98, 96, 96]
     },
     {
       key: 'relaxed-open',
       label: 'Relaxed Open',
       src: 'assets/images/projects/robot-hand-poses/pose-relaxed-open.png',
-      targets: [82, 88, 94, 90, 84]
+      targets: [94, 91, 93, 91, 89]
     },
     {
-      key: 'open',
-      label: 'Open Hand',
-      src: 'assets/images/projects/robot-hand-poses/pose-open.png',
-      targets: [84, 100, 100, 100, 100]
+      key: 'thumb-open',
+      label: 'Thumb Open',
+      src: 'assets/images/projects/robot-hand-poses/pose-thumb-open.png',
+      targets: [96, 82, 84, 80, 78]
+    },
+    {
+      key: 'curl-soft',
+      label: 'Curl Soft',
+      src: 'assets/images/projects/robot-hand-poses/pose-curl-soft.png',
+      targets: [94, 72, 74, 70, 68]
+    },
+    {
+      key: 'claw',
+      label: 'Claw',
+      src: 'assets/images/projects/robot-hand-poses/pose-claw.png',
+      targets: [90, 58, 56, 54, 52]
+    },
+    {
+      key: 'grip-mid',
+      label: 'Grip Mid',
+      src: 'assets/images/projects/robot-hand-poses/pose-grip-mid.png',
+      targets: [84, 46, 44, 42, 40]
+    },
+    {
+      key: 'grip-tight',
+      label: 'Grip Tight',
+      src: 'assets/images/projects/robot-hand-poses/pose-grip-tight.png',
+      targets: [76, 32, 30, 28, 26]
+    },
+    {
+      key: 'hook',
+      label: 'Hook',
+      src: 'assets/images/projects/robot-hand-poses/pose-hook.png',
+      targets: [68, 22, 20, 18, 18]
+    },
+    {
+      key: 'fist',
+      label: 'Fist',
+      src: 'assets/images/projects/robot-hand-poses/pose-fist.png',
+      targets: [24, 10, 10, 10, 10]
     },
     {
       key: 'rock',
@@ -377,24 +403,39 @@
     });
   }
 
+  function findPoseByKey(key) {
+    var index;
+    for (index = 0; index < ROBOT_POSE_LIBRARY.length; index += 1) {
+      if (ROBOT_POSE_LIBRARY[index].key === key) return ROBOT_POSE_LIBRARY[index];
+    }
+    return null;
+  }
+
+  function scoreRobotPose(pose, values) {
+    var score = 0;
+    pose.targets.forEach(function (target, index) {
+      var delta = (values[index] || 0) - target;
+      score += delta * delta;
+    });
+    return score;
+  }
+
   function pickRobotPose(values) {
     var bestPose = ROBOT_POSE_LIBRARY[0];
     var bestScore = Infinity;
 
     ROBOT_POSE_LIBRARY.forEach(function (pose) {
-      var score = 0;
-      pose.targets.forEach(function (target, index) {
-        var delta = (values[index] || 0) - target;
-        score += delta * delta;
-      });
-
+      var score = scoreRobotPose(pose, values);
       if (score < bestScore) {
         bestScore = score;
         bestPose = pose;
       }
     });
 
-    return bestPose;
+    return {
+      pose: bestPose,
+      score: bestScore
+    };
   }
 
   function computeRobotPoints(landmarks, width, height) {
@@ -459,7 +500,8 @@
     var handednessMetric = document.getElementById('handednessMetric');
     var gestureMetric = document.getElementById('gestureMetric');
     var depthMetric = document.getElementById('depthMetric');
-    var robotImage = robotStage ? robotStage.querySelector('.robot-hand-visual') : null;
+    var robotBaseImage = robotStage ? robotStage.querySelector('.robot-hand-visual-base') : null;
+    var robotBlendImage = document.getElementById('robotHandBlendVisual');
     var poseReferenceCards = Array.prototype.slice.call(document.querySelectorAll('.pose-reference-card'));
     var fingerMetrics = {
       thumb: {
@@ -489,7 +531,7 @@
       !robotBackdrop || !robotMotion ||
       !placeholder || !requestBtn || !disconnectBtn || !status ||
       !trackingChip || !robotTrackingState || !trackingMetric ||
-      !handednessMetric || !gestureMetric || !depthMetric || !robotImage ||
+      !handednessMetric || !gestureMetric || !depthMetric || !robotBaseImage || !robotBlendImage ||
       !fingerMetrics.thumb.value || !fingerMetrics.thumb.bar ||
       !fingerMetrics.index.value || !fingerMetrics.index.bar ||
       !fingerMetrics.middle.value || !fingerMetrics.middle.bar ||
@@ -511,7 +553,10 @@
       smoothedRobotPoints: null,
       smoothedFingerValues: null,
       smoothedRotation: { x: 0, y: 0, z: 0 },
+      pendingRobotPoseKey: '',
+      pendingRobotPoseFrames: 0,
       currentRobotPoseKey: '',
+      poseBlendRafId: 0,
       destroyed: false
     };
 
@@ -539,10 +584,42 @@
       });
     }
 
-    function setRobotPose(pose) {
-      if (!pose || state.currentRobotPoseKey === pose.key) return;
+    function resetPendingRobotPose() {
+      state.pendingRobotPoseKey = '';
+      state.pendingRobotPoseFrames = 0;
+    }
+
+    function clearPoseBlend() {
+      if (state.poseBlendRafId) {
+        cancelAnimationFrame(state.poseBlendRafId);
+        state.poseBlendRafId = 0;
+      }
+      robotBlendImage.classList.remove('is-visible');
+    }
+
+    function setRobotPose(pose, skipBlend) {
+      if (!pose) return;
+      if (state.currentRobotPoseKey === pose.key && !skipBlend) return;
+
+      var previousSrc = robotBaseImage.getAttribute('src') || pose.src;
+      clearPoseBlend();
+
+      if (!state.currentRobotPoseKey || skipBlend) {
+        robotBaseImage.src = pose.src;
+        robotBlendImage.src = pose.src;
+      } else {
+        robotBlendImage.src = previousSrc;
+        robotBlendImage.classList.add('is-visible');
+        robotBaseImage.src = pose.src;
+        state.poseBlendRafId = requestAnimationFrame(function () {
+          state.poseBlendRafId = requestAnimationFrame(function () {
+            robotBlendImage.classList.remove('is-visible');
+            state.poseBlendRafId = 0;
+          });
+        });
+      }
+
       state.currentRobotPoseKey = pose.key;
-      robotImage.src = pose.src;
       robotBackdrop.setAttribute('data-pose', pose.key);
       robotStage.style.setProperty('--robot-stage-image', 'url("' + pose.src + '")');
       poseReferenceCards.forEach(function (card) {
@@ -560,8 +637,10 @@
 
     function resetRobotTransform() {
       state.smoothedRotation = { x: 0, y: 0, z: 0 };
+      clearPoseBlend();
       robotMotion.style.transform = 'perspective(1400px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)';
-      robotImage.style.transform = 'translate3d(0px, 0px, 16px) scale(1)';
+      robotBaseImage.style.transform = 'translate3d(0px, 0px, 16px) scale(1)';
+      robotBlendImage.style.transform = 'translate3d(0px, 0px, 16px) scale(1)';
     }
 
     function applyRobotTransform(targetRotation, hasHand, worldLandmarks, landmarks) {
@@ -584,9 +663,45 @@
         'perspective(1400px) rotateX(' + state.smoothedRotation.x.toFixed(2) + 'deg) ' +
         'rotateY(' + state.smoothedRotation.y.toFixed(2) + 'deg) ' +
         'rotateZ(' + state.smoothedRotation.z.toFixed(2) + 'deg)';
-      robotImage.style.transform =
+      var transformValue =
         'translate3d(' + offsetX.toFixed(2) + 'px, ' + offsetY.toFixed(2) + 'px, 16px) ' +
         'scale(' + depthScale.toFixed(3) + ')';
+      robotBaseImage.style.transform = transformValue;
+      robotBlendImage.style.transform = transformValue;
+    }
+
+    function selectStableRobotPose(values) {
+      var bestMatch = pickRobotPose(values);
+      var currentPose = findPoseByKey(state.currentRobotPoseKey);
+
+      if (!currentPose) {
+        resetPendingRobotPose();
+        return bestMatch.pose;
+      }
+
+      if (currentPose.key === bestMatch.pose.key) {
+        resetPendingRobotPose();
+        return currentPose;
+      }
+
+      if (scoreRobotPose(currentPose, values) <= bestMatch.score + POSE_SWITCH_MARGIN) {
+        resetPendingRobotPose();
+        return currentPose;
+      }
+
+      if (state.pendingRobotPoseKey !== bestMatch.pose.key) {
+        state.pendingRobotPoseKey = bestMatch.pose.key;
+        state.pendingRobotPoseFrames = 1;
+        return currentPose;
+      }
+
+      state.pendingRobotPoseFrames += 1;
+      if (state.pendingRobotPoseFrames < POSE_SWITCH_CONFIRM_FRAMES) {
+        return currentPose;
+      }
+
+      resetPendingRobotPose();
+      return bestMatch.pose;
     }
 
     function stopStream() {
@@ -697,11 +812,14 @@
       depthMetric.textContent = '0.0 cm';
       setStatus('granted', '손이 화면 안에 들어오면 21개 랜드마크와 로봇손 매핑이 시작됩니다.');
       applyRobotTransform({ x: 0, y: 0, z: 0 }, false, null, null);
+      resetPendingRobotPose();
       Object.keys(fingerMetrics).forEach(function (key) {
         fingerMetrics[key].value.textContent = '0%';
         fingerMetrics[key].bar.style.width = '0%';
       });
-      setRobotPose(ROBOT_POSE_LIBRARY[5]);
+      if (state.currentRobotPoseKey !== 'open') {
+        setRobotPose(findPoseByKey('open'), true);
+      }
 
       clearCanvas(robotCtx, robotCanvas);
     }
@@ -727,7 +845,7 @@
         fingerData.map(function (item) { return item.value; }),
         0.28
       );
-      var selectedRobotPose = pickRobotPose(smoothedFingerValues);
+      var selectedRobotPose = selectStableRobotPose(smoothedFingerValues);
 
       state.smoothedRobotPoints = robotPoints;
       state.smoothedFingerValues = smoothedFingerValues;
@@ -866,7 +984,7 @@
     disconnectBtn.addEventListener('click', disconnectCamera);
 
     preloadRobotPoses();
-    setRobotPose(ROBOT_POSE_LIBRARY[5]);
+    setRobotPose(findPoseByKey('open'), true);
 
     window.addEventListener('beforeunload', function () {
       state.destroyed = true;
