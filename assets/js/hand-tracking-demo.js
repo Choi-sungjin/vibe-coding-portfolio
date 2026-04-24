@@ -32,6 +32,37 @@
     { key: 'pinky', label: 'PK', tip: 20, chain: [17, 18, 19, 20], color: 'rgba(255, 110, 204, 0.96)' }
   ];
 
+  var ROBOT_FINGER_ALIGNMENT = {
+    thumb: { lateral: 1.08, pull: -0.2 },
+    index: { lateral: 0.44, pull: 0.08 },
+    middle: { lateral: 0.1, pull: 0.12 },
+    ring: { lateral: -0.24, pull: 0.08 },
+    pinky: { lateral: -0.62, pull: 0.04 }
+  };
+
+  var ROBOT_LANDMARK_HINTS = {
+    1: { finger: 'thumb', progress: 0.08, root: 1 },
+    2: { finger: 'thumb', progress: 0.38, root: 1 },
+    3: { finger: 'thumb', progress: 0.74, root: 1 },
+    4: { finger: 'thumb', progress: 1, root: 1 },
+    5: { finger: 'index', progress: 0.08, root: 5 },
+    6: { finger: 'index', progress: 0.44, root: 5 },
+    7: { finger: 'index', progress: 0.78, root: 5 },
+    8: { finger: 'index', progress: 1, root: 5 },
+    9: { finger: 'middle', progress: 0.08, root: 9 },
+    10: { finger: 'middle', progress: 0.44, root: 9 },
+    11: { finger: 'middle', progress: 0.78, root: 9 },
+    12: { finger: 'middle', progress: 1, root: 9 },
+    13: { finger: 'ring', progress: 0.08, root: 13 },
+    14: { finger: 'ring', progress: 0.44, root: 13 },
+    15: { finger: 'ring', progress: 0.78, root: 13 },
+    16: { finger: 'ring', progress: 1, root: 13 },
+    17: { finger: 'pinky', progress: 0.1, root: 17 },
+    18: { finger: 'pinky', progress: 0.46, root: 17 },
+    19: { finger: 'pinky', progress: 0.8, root: 17 },
+    20: { finger: 'pinky', progress: 1, root: 17 }
+  };
+
   var ROBOT_POSE_LIBRARY = [
     {
       key: 'open',
@@ -152,6 +183,18 @@
       x: a.x - b.x,
       y: a.y - b.y,
       z: (a.z || 0) - (b.z || 0)
+    };
+  }
+
+  function normalize2D(vector, fallback) {
+    var length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+    if (length < 0.00001) {
+      return fallback || { x: 0, y: -1 };
+    }
+
+    return {
+      x: vector.x / length,
+      y: vector.y / length
     };
   }
 
@@ -364,15 +407,26 @@
     fingerMetrics.forEach(function (metric, index) {
       var config = FINGER_CONFIGS[index];
       var tipPoint = points[config.tip];
+      var jointPoint = points[config.chain[config.chain.length - 2]];
       if (!tipPoint) return;
+
+      var tipDirection = normalize2D(
+        jointPoint
+          ? { x: tipPoint.x - jointPoint.x, y: tipPoint.y - jointPoint.y }
+          : { x: 0, y: -1 },
+        { x: 0, y: -1 }
+      );
+      var labelDistance = 18 + metric.intensity * 7;
+      var labelX = tipPoint.x + tipDirection.x * labelDistance;
+      var labelY = tipPoint.y + tipDirection.y * labelDistance;
 
       ctx.save();
       ctx.globalCompositeOperation = 'screen';
       ctx.strokeStyle = config.color;
       ctx.fillStyle = config.color;
       ctx.shadowColor = config.color;
-      ctx.shadowBlur = 18;
-      ctx.lineWidth = 3 + metric.intensity * 5;
+      ctx.shadowBlur = 20;
+      ctx.lineWidth = 4 + metric.intensity * 5.4;
 
       ctx.beginPath();
       config.chain.forEach(function (pointIndex, chainIndex) {
@@ -384,14 +438,14 @@
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.arc(tipPoint.x, tipPoint.y, 7 + metric.intensity * 4, 0, Math.PI * 2);
+      ctx.arc(tipPoint.x, tipPoint.y, 8.2 + metric.intensity * 4.6, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.shadowBlur = 0;
       ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
       ctx.font = '11px JetBrains Mono, monospace';
       ctx.textAlign = 'center';
-      ctx.fillText(config.label, tipPoint.x, tipPoint.y - 14);
+      ctx.fillText(config.label, labelX, labelY);
       ctx.restore();
     });
   }
@@ -521,8 +575,8 @@
   function computeRobotPoints(landmarks, width, height) {
     var anchors = {
       wrist: { x: width * 0.50, y: height * 0.82 },
-      indexMcp: { x: width * 0.62, y: height * 0.48 },
-      pinkyMcp: { x: width * 0.33, y: height * 0.56 }
+      indexMcp: { x: width * 0.64, y: height * 0.49 },
+      pinkyMcp: { x: width * 0.25, y: height * 0.57 }
     };
 
     var transform = buildAffineTransform(
@@ -536,8 +590,63 @@
 
     if (!transform) return [];
 
-    return landmarks.map(function (point) {
+    var transformedPoints = landmarks.map(function (point) {
       return applyAffineTransform(point, transform);
+    });
+
+    var wrist = transformedPoints[0];
+    var indexMcp = transformedPoints[5];
+    var middleMcp = transformedPoints[9];
+    var ringMcp = transformedPoints[13];
+    var pinkyMcp = transformedPoints[17];
+    var palmCenter = {
+      x: (indexMcp.x + middleMcp.x + ringMcp.x + pinkyMcp.x) / 4,
+      y: (indexMcp.y + middleMcp.y + ringMcp.y + pinkyMcp.y) / 4
+    };
+    var lateralAxis = normalize2D(
+      { x: indexMcp.x - pinkyMcp.x, y: indexMcp.y - pinkyMcp.y },
+      { x: 1, y: 0 }
+    );
+    var forwardAxis = normalize2D(
+      { x: palmCenter.x - wrist.x, y: palmCenter.y - wrist.y },
+      { x: 0, y: -1 }
+    );
+    var palmWidth = Math.max(distance(indexMcp, pinkyMcp), width * 0.18);
+    var palmHeight = Math.max(distance(wrist, middleMcp), height * 0.16);
+
+    return transformedPoints.map(function (point, index) {
+      var hint = ROBOT_LANDMARK_HINTS[index];
+      if (!hint) {
+        return point;
+      }
+
+      var alignment = ROBOT_FINGER_ALIGNMENT[hint.finger];
+      var basePoint = transformedPoints[hint.root] || point;
+      var fingerDirection = normalize2D(
+        { x: point.x - basePoint.x, y: point.y - basePoint.y },
+        forwardAxis
+      );
+      var palmBias =
+        ((point.x - palmCenter.x) * lateralAxis.x + (point.y - palmCenter.y) * lateralAxis.y) /
+        palmWidth;
+      var spread = palmWidth * (0.028 + 0.12 * hint.progress) * alignment.lateral;
+      var fan = palmWidth * 0.032 * hint.progress * palmBias;
+      var pull = palmHeight * 0.082 * hint.progress * alignment.pull;
+      var distalPush = palmHeight * 0.046 * hint.progress * hint.progress;
+
+      return {
+        x:
+          point.x +
+          lateralAxis.x * (spread + fan) +
+          forwardAxis.x * pull +
+          fingerDirection.x * distalPush,
+        y:
+          point.y +
+          lateralAxis.y * (spread + fan) +
+          forwardAxis.y * pull +
+          fingerDirection.y * distalPush,
+        z: point.z || 0
+      };
     });
   }
 
